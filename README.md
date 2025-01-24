@@ -22,10 +22,59 @@ An advanced AI-driven crypto management platform that combines natural language 
 
 ## Project Structure
 
-- `/components/ai` - Core AI interaction components
-- `/components/common` - Shared UI components
-- `/hooks` - Custom React hooks for AI/Audio/Gestures
-- `/utils` - Utility functions and parsers
+/feather
+  next-env.d.ts
+  next.config.ts
+  tailwind.config.ts
+  tsconfig.json
+  /app
+	layout.tsx
+	page.tsx
+	globals.css
+
+  /components
+    Interface.tsx
+    Chat.tsx
+    FeaturesSection.tsx
+    HeroSection.tsx
+    StatsSection.tsx
+    /ai
+      AICore.tsx              # Main AI interaction component
+      AIInterface.tsx		# Basic AI chat component
+      ChatInterface.tsx       # Chat UI and message handling
+      InteractionFeedback.tsx # Visual/haptic feedback system
+    /common
+      FloatingOrbs.tsx       # Ambient animation elements
+      NotificationSystem.tsx  # Toast notifications
+      ActionButton.tsx       # Interactive buttons
+      TransactionCard.tsx    # Transaction display component
+  
+  /hooks
+    useAudio.ts             # Voice input processing
+    useChatSystem.ts        # Chat state management
+    useGestures.ts          # Gesture recognition
+    useNeuralAnimation.ts   # Neural network animations
+    useActionHandler.ts     # Action execution logic
+    useAdaptiveUI.ts        # UI adaptation system
+    useAIContext.ts
+
+  /state
+    aiState.ts                  # AI-related state
+
+  /types
+    ai.ts                  # AI-related type definitions
+    chat.ts               # Chat system interfaces
+    actions.ts            # Action type definitions
+
+  /utils
+    responseParser.ts       # AI response parsing
+    audioProcessor.ts       # Audio signal processing
+    animationSystem.ts      # Animation utilities
+
+  /public
+    FEATHER.png - light logo
+    DARKFEATHER.PNG - dark logo
+
 
 ## Local Development
 

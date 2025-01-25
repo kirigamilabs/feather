@@ -1,7 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Bot, Wallet, Brain, RefreshCcw, LineChart } from 'lucide-react'
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion'
+import { Send, Bot, Wallet, Brain, RefreshCcw, LineChart, Mic, Zap, TrendingUp, Award, ArrowRightLeft, LucideIcon,
+  X, Maximize2, Minimize2  } from 'lucide-react'
 import { Button } from '@/components/Button'
+import { useAI } from '@/components/AIProvider';
+import { useAICore } from '@/hooks/useAICore';
+import { useAIStore } from '@/state/aiState';
+import { FeedbackSystem } from '@/components/InteractionFeedback'
+import { AIPersonalityIndicator } from '@/components/AIPersonality'
+import { MessageTransition, ThinkingTransition } from '@/components/Transitions';
+import { MarketAnalysis } from '@/components/MarketAnalysis';
+import { PortfolioOptimizer } from '@/components/PortfolioOptimizer';
+import { RewardsSystem } from '@/components/RewardsSystem';
+//import { FeatherProvider, useFeather, useFeatureShortcuts } from '@/components/FeatherProvider';
 
 interface Transaction {
   hash: string;
@@ -51,6 +62,103 @@ const NavigationMenu = ({ activeView, setActiveView }: {
   </div>
 );
 
+interface PanelComponent {
+  title: string;
+  icon: React.ComponentType;
+  component: React.ComponentType;
+}
+
+const PANELS: Record<string, PanelComponent> = {
+  market: {
+    title: 'Market Analysis',
+    icon: LineChart,
+    component: MarketAnalysis,
+  },
+  portfolio: {
+    title: 'Portfolio',
+    icon: TrendingUp,
+    component: PortfolioOptimizer,
+  },
+  rewards: {
+    title: 'Rewards',
+    icon: Award,
+    component: RewardsSystem,
+  }
+};
+
+type PanelType = keyof typeof PANELS;
+
+const Sidebar = ({ activePanel, setActivePanel }: { 
+  activePanel: PanelType; 
+  setActivePanel: (panel: PanelType ) => void;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const Icon = PANELS[activePanel].icon;
+  const Component = PANELS[activePanel].component;
+
+  
+  return (
+    <>
+      {/* Quick Access Bar */}
+      <div className="fixed left-0 top-1/2 -translate-y-1/2 bg-card/80 backdrop-blur-sm rounded-r-lg p-2 space-y-4">
+        {Object.entries(PANELS).map(([key, { icon: Icon }]) => (
+          <button
+            key={key}
+            onClick={() => setActivePanel(key as PanelType)}
+            className={`p-2 rounded-lg transition-colors ${
+              activePanel === key ? 'bg-primary text-white' : 'hover:bg-primary/10'
+            }`}
+          >
+            <Icon />
+          </button>
+        ))}
+      </div>
+
+      {/* Panel Display */}
+      <AnimatePresence>
+        {activePanel && (
+          <motion.div
+            initial={{ x: -300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            className={`fixed left-16 top-0 h-full bg-background/95 backdrop-blur-lg border-r border-border/50 ${
+              isExpanded ? 'w-[800px]' : 'w-[400px]'
+            }`}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-border/50">
+              <div className="flex items-center gap-2">
+                {Icon && <Icon />}
+                <h2 className="font-semibold">{PANELS[activePanel].title}</h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="p-2 hover:bg-primary/10 rounded-lg"
+                >
+                  {isExpanded ? (
+                    <Minimize2 className="w-4 h-4" />
+                  ) : (
+                    <Maximize2 className="w-4 h-4" />
+                  )}
+                </button>
+                <button
+                  onClick={() => setActivePanel('rewards')}
+                  className="p-2 hover:bg-primary/10 rounded-lg"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="p-4 h-[calc(100vh-65px)] overflow-y-auto">
+              {Component && <Component />}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
 const PortfolioView = ({ manifesto }: { manifesto: any }) => (
   <motion.div
     initial={{ opacity: 0, x: 20 }}
@@ -63,6 +171,103 @@ const PortfolioView = ({ manifesto }: { manifesto: any }) => (
   </motion.div>
 );
 
+const MoodIndicator = () => {
+  const { confidence, mode } = useAIStore(); // Add mode
+  const confidenceMotion = useMotionValue(confidence);
+  const backgroundColor = useTransform(
+    confidenceMotion,
+    [0, 0.5, 1],
+    ['rgba(239, 68, 68, 0.2)', 'rgba(59, 130, 246, 0.2)', 'rgba(16, 185, 129, 0.2)']
+  );
+
+  return (
+    <motion.div
+      className="absolute inset-0 pointer-events-none"
+      style={{ backgroundColor }}
+      animate={{ scale: mode === 'thinking' ? [1, 1.02, 1] : 1 }}
+      transition={{ duration: 2, repeat: Infinity }}
+    />
+  );
+};
+
+const ParticleField = ({ neuralRef }: { neuralRef: React.RefObject<HTMLCanvasElement | null> }) => (
+  <motion.canvas
+    ref={neuralRef}
+    className="absolute inset-0 pointer-events-none opacity-30"
+    style={{ mixBlendMode: 'screen' }}
+  />
+);
+
+const FeatureDiscovery = () => {
+  const [showFeatures, setShowFeatures] = useState(false);
+
+  const features = [
+    {
+      icon: <Zap className="w-8 h-8 text-yellow-500" />,
+      title: "Instant Trading",
+      description: "Just tell the AI what you want to trade - it handles everything"
+    },
+    {
+      icon: <Brain className="w-8 h-8 text-purple-500" />,
+      title: "Smart Portfolio",
+      description: "AI automatically balances your portfolio based on market conditions"
+    }
+  ];
+
+  const FeatureCard = React.memo(({ icon, title, description }: {
+    icon: React.ReactNode;
+    title: string;
+    description: string;
+  }) => (
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="bg-card/80 rounded-xl p-6"
+    >
+      {icon}
+      <h3 className="text-lg font-semibold mt-4">{title}</h3>
+      <p className="text-sm text-muted-foreground mt-2">{description}</p>
+    </motion.div>
+  ));
+
+  return (
+    <AnimatePresence>
+      {showFeatures && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center"
+        >
+          <div className="bg-card rounded-2xl p-8 max-w-2xl">
+            <div className="grid grid-cols-2 gap-6">
+              {features.map((feature, index) => (
+                <FeatureCard 
+                  key={index} 
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                />
+              ))}
+            </div>
+            <Button 
+              onClick={() => setShowFeatures(false)}
+              className="mt-6 w-full"
+              variant="gradient"
+            >
+              Got it
+            </Button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const messageContainsTrading = (content: string) => {
+  return content.toLowerCase().includes('trade') || 
+        content.toLowerCase().includes('swap');
+};
+
 export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
@@ -72,7 +277,6 @@ export default function AIChat() {
     }
   }])
   const [input, setInput] = useState('')
-  const [isThinking, setIsThinking] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
   const [activeView, setActiveView] = useState<'chat' | 'portfolio'>('chat')
   const [manifesto, setManifesto] = useState<{
@@ -80,15 +284,50 @@ export default function AIChat() {
     wallets: { address: string; balance: number; }[];
   } | null>(null);
 
+  const { mode, processInput, confidence } = useAICore();
+  const { setMode, feedback } = useAIStore();
+  const { startListening, stopListening, audioAnalysis, neuralRef } = useAI();
+  const [isListening, setIsListening] = useState(false);
+
+  const [activePanel, setActivePanel] = useState<PanelType>('market');
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  const handleVoiceInput = async () => {
+    if (isListening) {
+      stopListening();
+      setIsListening(false);
+    } else {
+      await startListening();
+      setIsListening(true);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!input.trim() || isThinking) return
-    await handleSend()
-  }
+    e.preventDefault();
+    if (!input.trim() || mode === 'thinking') return;
+
+    setMessages(prev => [...prev, {
+      role: 'user',
+      content: input,
+    }])
+    setInput('');
+
+    try {
+      const response = await processInput(input);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: response
+      }]);
+    } catch (error) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.'
+      }]);
+    }
+  };
 
   const handleAction = async (action: Action) => {
     switch (action.type) {
@@ -120,12 +359,12 @@ export default function AIChat() {
 
   //'X-Manifesto-ID': manifesto?.id
   const handleSend = async () => {
-    if (!input.trim() || isThinking) return
+    if (!input.trim() || mode === 'thinking') return
 
     const userMessage: Message = { role: 'user', content: input }
     setMessages(prev => [...prev, userMessage])
     setInput('')
-    setIsThinking(true)
+    setMode('thinking')
 
     try {
       const response = await fetch('/api/chat', {
@@ -163,7 +402,7 @@ export default function AIChat() {
         content: 'Sorry, I encountered an error. Please try again.'
       } as Message])
     } finally {
-      setIsThinking(false)
+      setMode('observing')
     }
   }
 
@@ -187,6 +426,12 @@ export default function AIChat() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-background to-background/50">
+      <Sidebar activePanel={activePanel} setActivePanel={setActivePanel}/>
+      <ParticleField neuralRef={neuralRef} />
+      <MoodIndicator />
+      <FeatureDiscovery />
+      <FeedbackSystem />
+      <AIPersonalityIndicator />
       <motion.div 
         className="w-20 border-r border-border/50"
         initial={false}
@@ -209,40 +454,42 @@ export default function AIChat() {
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 <AnimatePresence>
                   {messages.map((message, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                        message.role === 'user' 
-                          ? 'bg-gradient-to-r from-primary to-secondary text-white'
-                          : 'bg-card text-card-foreground shadow-md dark:shadow-primary/10'
-                      }`}>
-                        <div>{message.content}</div>
-                        {message.action && message.action.type && (
-                          <div className="mt-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleAction({ type: message.action!.type, params: message.action!.data })}
-                              className="flex items-center gap-2"
-                            >
-                              {message.action.type === 'connect_wallet' ? (
-                                <><Wallet className="h-4 w-4" /> Connect Wallet</>
-                              ) : (
-                                <><RefreshCcw className="h-4 w-4" /> Execute Trade</>
-                              )}
-                            </Button>
-                          </div>
-                        )}
-                        {message.metadata?.transactions?.map((tx, index) => (
-                          <TransactionCard key={index} transaction={tx} />
-                        ))}
-                      </div>
-                    </motion.div>
+                    <MessageTransition key={i}>
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                          message.role === 'user' 
+                            ? 'bg-gradient-to-r from-primary to-secondary text-white'
+                            : 'bg-card text-card-foreground shadow-md dark:shadow-primary/10'
+                        }`}>
+                          <div>{message.content}</div>
+                          {message.action && message.action.type && (
+                            <div className="mt-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleAction({ type: message.action!.type, params: message.action!.data })}
+                                className="flex items-center gap-2"
+                              >
+                                {message.action.type === 'connect_wallet' ? (
+                                  <><Wallet className="h-4 w-4" /> Connect Wallet</>
+                                ) : (
+                                  <><RefreshCcw className="h-4 w-4" /> Execute Trade</>
+                                )}
+                              </Button>
+                            </div>
+                          )}
+                          {message.metadata?.transactions?.map((tx, index) => (
+                            <TransactionCard key={index} transaction={tx} />
+                          ))}
+                        </div>
+                      </motion.div>
+                    </MessageTransition>
                   ))}
                 </AnimatePresence>
                 <div ref={chatEndRef} />
@@ -250,17 +497,26 @@ export default function AIChat() {
 
               <form onSubmit={handleSubmit} className="border-t border-border/50 bg-card/80 p-4 backdrop-blur-sm">
                 <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    onClick={handleVoiceInput}
+                    size="icon"
+                    variant={isListening ? 'destructive' : 'outline'}
+                    className="rounded-full"
+                  >
+                    <Mic className={`h-5 w-5 ${isListening ? 'animate-pulse' : ''}`} />
+                  </Button>
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Message Feather AI..."
                     className="flex-1 rounded-xl border border-border bg-background px-4 py-3 
                              focus:outline-none focus:ring-2 focus:ring-primary dark:bg-card"
-                    disabled={isThinking}
+                    disabled={mode === 'thinking'}
                   />
                   <Button 
                     type="submit"
-                    disabled={isThinking}
+                    disabled={mode === 'thinking'}
                     size="icon"
                     className="rounded-full bg-primary hover:bg-primary/90"
                   >
@@ -269,22 +525,24 @@ export default function AIChat() {
                 </div>
               </form>
 
-              {isThinking && (
+              {mode === 'thinking' && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm">
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.2, 1],
-                      rotate: [0, 180, 360]
-                    }}
-                    transition={{ 
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                    className="rounded-full bg-primary/20 p-4"
-                  >
-                    <Brain className="h-8 w-8 text-primary" />
-                  </motion.div>
+                  <ThinkingTransition>
+                      <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        rotate: [0, 180, 360]
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      className="rounded-full bg-primary/20 p-4"
+                    >
+                      <Brain className="h-8 w-8 text-primary" />
+                    </motion.div>
+                  </ThinkingTransition>
                 </div>
               )}
             </div>

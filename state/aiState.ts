@@ -1,41 +1,67 @@
-// store/aiState.ts
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+//import { persist } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 
-interface AIState {
-  mode: 'observing' | 'thinking' | 'speaking' | 'learning';
-  context: Record<string, any>;
+export interface AIState {
+  mode: 'observing' | 'thinking' | 'speaking' | 'learning' | 'listening' ;
   confidence: number;
+  contextDepth: number;
   learningProgress: number;
-  updateMode: (mode: AIState['mode']) => void;
-  updateContext: (context: Partial<AIState['context']>) => void;
+  personality: {
+    adaptability: number;
+    creativity: number;
+    precision: number;
+  };
+  feedback: {
+    visual: boolean;
+    haptic: boolean;
+    audio: boolean;
+  };
+  context: Record<string, any>;
 }
 
-export const useAIStore = create<AIState>()(
-  persist(
+interface AIActions {
+  setMode: (mode: AIState['mode']) => void;
+  updateConfidence: (value: number) => void;
+  updateContext: (context: Partial<AIState['context']>) => void;
+  updatePersonality: (updates: Partial<AIState['personality']>) => void;
+  setFeedback: (updates: Partial<AIState['feedback']>) => void;
+}
+
+const initialState: AIState = {
+  mode: 'observing',
+  confidence: 0.95,
+  contextDepth: 0,
+  learningProgress: 0,
+  personality: {
+    adaptability: 0.8,
+    creativity: 0.7,
+    precision: 0.9
+  },
+  feedback: {
+    visual: true,
+    haptic: true,
+    audio: false
+  },
+  context: {}
+};
+
+export const useAIStore = create<AIState & AIActions>()(
+  devtools(
     (set) => ({
-      mode: 'observing',
-      context: {},
-      confidence: 0.95,
-      learningProgress: 0,
-      updateMode: (mode) => set({ mode }),
-      updateContext: (context) => 
-        set((state) => ({ 
-          context: { ...state.context, ...context },
-          confidence: calculateConfidence(context)
-        }))
+      ...initialState,
+      setMode: (mode) => set({ mode }),
+      updateConfidence: (confidence) => set({ confidence }),
+      updateContext: (context) => set((state) => ({ 
+        context: { ...state.context, ...context }
+      })),
+      updatePersonality: (updates) => set((state) => ({
+        personality: { ...state.personality, ...updates }
+      })),
+      setFeedback: (updates) => set((state) => ({
+        feedback: { ...state.feedback, ...updates }
+      }))
     }),
-    {
-      name: 'ai-state',
-      partialize: (state) => ({
-        context: state.context,
-        learningProgress: state.learningProgress
-      })
-    }
+    { name: 'AI Store' }
   )
 );
-
-const calculateConfidence = (context: Record<string, any>): number => {
-  // Implement confidence calculation logic
-  return 0.95;
-};

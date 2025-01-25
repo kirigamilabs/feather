@@ -1,65 +1,103 @@
-import React from 'react';
+'use client'
 
-const HeroSection = () => {
+import { useTheme } from 'next-themes'
+import { motion } from 'framer-motion'
+import { Bot, ArrowRight } from 'lucide-react'
+import { Button } from '@/components/Button'
+
+interface HeroSectionProps {
+  onStart: () => void;
+}
+
+export default function HeroSection({ onStart }: HeroSectionProps) {
+  const { theme } = useTheme()
+  const isDark = true
 
   return (
-    <div className="relative min-h-screen w-full bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 dark:bg-black/80 backdrop-blur-sm z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-                Feather
-              </div>
-            </div>
-            <div className="hidden md:block">
-              <div className="flex items-center space-x-4">
-                <a href="#features" className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
-                  Features
-                </a>
-                <a href="#pricing" className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400">
-                  Pricing
-                </a>
-                <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg hover:opacity-90">
-                  Get Started
-                </button>
-              </div>
-            </div>
+    <div className="relative min-h-[90vh] w-full flex items-center">
+      {/* Theme-specific backgrounds */}
+      {isDark ? (
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-background to-background/50" />
+          <div className="absolute inset-0">
+            {/* Circuit lines */}
+            <svg className="w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <pattern id="circuit" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 0 10 L 10 10 L 10 0" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+                <circle cx="10" cy="10" r="1" fill="currentColor"/>
+              </pattern>
+              <rect x="0" y="0" width="100" height="100" fill="url(#circuit)"/>
+            </svg>
           </div>
         </div>
-      </nav>
+      ) : (
+        <div className="absolute inset-0 bg-[url('/paper-texture.png')] opacity-5" />
+      )}
 
-      {/* Hero Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32">
-        <div className="relative">
-          {/* Diamond Background */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-96 h-96 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rotate-45 transform"></div>
+      {/* Content */}
+      <div className="container relative z-10 mx-auto px-4 py-32">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-auto max-w-3xl text-center"
+        >
+          <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-background/50 px-4 py-2 backdrop-blur">
+            <Bot className="h-5 w-5 text-primary" />
+            <span>Powered by Advanced AI</span>
           </div>
-
-          {/* Content */}
-          <div className="relative text-center">
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent mb-6">
-              AI-Powered Crypto Management
-            </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-              Revolutionize your crypto portfolio with advanced AI automation, 
-              intelligent trading strategies, and comprehensive DeFi integration.
-            </p>
-            <div className="flex justify-center space-x-4">
-              <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg text-lg hover:opacity-90">
-                Get Started
-              </button>
-              <button className="border border-blue-500 text-blue-500 dark:border-blue-400 dark:text-blue-400 px-8 py-3 rounded-lg text-lg hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                Learn More
-              </button>
-            </div>
+          
+          <h1 className="mt-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-4xl font-bold text-transparent sm:text-6xl">
+            AI-Powered Crypto Management
+          </h1>
+          
+          <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
+            Revolutionary decentralized platform integrating advanced AI capabilities for comprehensive crypto management, automation, and investment services.
+          </p>
+          
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row justify-center">
+          <Button 
+              onClick={onStart} 
+              size="lg" 
+              variant="gradient"
+              withAnimation
+              motionProps={{
+                whileHover: { scale: 1.05 },
+                whileTap: { scale: 0.95 }
+              }}
+              className="group font-semibold"
+              >
+              Get Started
+              <motion.span
+                className="ml-2 inline-block"
+                whileHover={{ x: 4 }}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </motion.span>
+            </Button>
+            <Button size="lg" variant="outline">
+              Learn More
+            </Button>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
-  );
-};
 
-export default HeroSection;
+      {/* Ambient particles */}
+      {isDark && (
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            animate={{
+              opacity: [0.3, 0.5, 0.3],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 blur-3xl"
+          />
+        </div>
+      )}
+    </div>
+  )
+}

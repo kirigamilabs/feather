@@ -27,29 +27,30 @@ An advanced AI-driven crypto management platform that combines natural language 
   next.config.ts
   tailwind.config.ts
   tsconfig.json
+  
   /app
-	layout.tsx
-	page.tsx
-	globals.css
+    layout.tsx
+    page.tsx
+    globals.css
+    /api
+      /chat
+        route.ts
 
   /components
+    AIChat.tsx
     Interface.tsx
-    Chat.tsx
     FeaturesSection.tsx
     HeroSection.tsx
     StatsSection.tsx
-    /ai
+
+    /ai - pending integration for demo
       AICore.tsx              # Main AI interaction component
-      AIInterface.tsx		# Basic AI chat component
-      ChatInterface.tsx       # Chat UI and message handling
+      AIInterface.tsx		      # Basic AI chat component
+      AIPersonality.tsx       # State of AI Personality component
       InteractionFeedback.tsx # Visual/haptic feedback system
-    /common
-      FloatingOrbs.tsx       # Ambient animation elements
-      NotificationSystem.tsx  # Toast notifications
-      ActionButton.tsx       # Interactive buttons
-      TransactionCard.tsx    # Transaction display component
+
   
-  /hooks
+  /hooks - pending
     useAudio.ts             # Voice input processing
     useChatSystem.ts        # Chat state management
     useGestures.ts          # Gesture recognition
@@ -58,15 +59,15 @@ An advanced AI-driven crypto management platform that combines natural language 
     useAdaptiveUI.ts        # UI adaptation system
     useAIContext.ts
 
-  /state
+  /state - pending
     aiState.ts                  # AI-related state
 
-  /types
+  /types - pending
     ai.ts                  # AI-related type definitions
     chat.ts               # Chat system interfaces
     actions.ts            # Action type definitions
 
-  /utils
+  /utils - pending
     responseParser.ts       # AI response parsing
     audioProcessor.ts       # Audio signal processing
     animationSystem.ts      # Animation utilities

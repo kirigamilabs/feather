@@ -1,20 +1,42 @@
-import { Metadata } from 'next';
-import HeroSection from './../components/HeroSection';
-import FeaturesSection from './../components/FeaturesSection';
-import { StatsSection } from './../components/StatsSection';
-//import ThemeProvider from '@/components/ThemeProvider';
+'use client'
 
-export const metadata: Metadata = {
-  title: 'Kirigami - AI-Powered Crypto Management',
-  description: 'Revolutionary decentralized platform integrating advanced AI capabilities for comprehensive crypto management, automation, and investment services.',
-};
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import HeroSection from '@/components/HeroSection'
+import FeaturesSection from '@/components/FeaturesSection'
+import { StatsSection } from '@/components/StatsSection'
+import AIChat from '@/components/AIChat'
 
 export default function Home() {
+  const [showChat, setShowChat] = useState(false)
+
   return (
-      <main className="min-h-screen">
-        <HeroSection />
-        <FeaturesSection />
-        <StatsSection />
-      </main>
-  );
+    <main className="min-h-screen">
+      <AnimatePresence mode="wait">
+        {showChat ? (
+          <motion.div
+            key="chat"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="fixed inset-0 z-50 bg-background"
+          >
+            <AIChat />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="landing"
+            initial={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
+            <HeroSection onStart={() => setShowChat(true)} />
+            <FeaturesSection />
+            <StatsSection />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </main>
+  )
 }

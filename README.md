@@ -1,6 +1,6 @@
-# FEATHER AI Platform
+# TBD AI Platform
 
-![FEATHER AI Logo](./public/FEATHER.png)
+![S0 AI Logo](./public/DARKFEATHER.png)
 
 An advanced AI-driven crypto management platform that combines natural language processing with sophisticated portfolio management.
 
@@ -22,7 +22,8 @@ An advanced AI-driven crypto management platform that combines natural language 
 
 ## Project Structure
 
-/feather
+/kiri
+/gami
  /app
    /api
      /chat
@@ -68,7 +69,6 @@ An advanced AI-driven crypto management platform that combines natural language 
    responseParser.ts
 
  /public
-   FEATHER.png
    DARKFEATHER.png
 
 
@@ -76,16 +76,16 @@ An advanced AI-driven crypto management platform that combines natural language 
 
 ```bash
 # Install dependencies
-yarn install
+bun install
 
 # Run development server
-yarn dev
+bun run dev
 
 # Run tests
-yarn test
+bun run test
 
 # Build for production
-yarn build
+bun run build
 ```
 
 ## AI Integration

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Feather AI - AI-Powered Crypto Management",
+  title: "Feat.",
   description: "Revolutionary decentralized platform integrating advanced AI capabilities for comprehensive crypto management, automation, and investment services.",
 };
 

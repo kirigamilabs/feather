@@ -150,5 +150,11 @@ export const useFeatureShortcuts = () => {
       description: 'Toggle Portfolio',
       context: ['trading']
     });
+
+    feather.registerShortcut('Ctrl+W', {
+      action: () => {/* connect wallet */},
+      description: 'Connect Wallet',
+      context: ['wallet-discussion']
+    });
   }, [feather]);
 };

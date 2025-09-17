@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import HeroSection from '@/components/HeroSection'
-import FeaturesSection from '@/components/FeaturesSection'
-import { StatsSection } from '@/components/StatsSection'
 import AIChat from '@/components/AIChat'
 
 export default function Home() {
@@ -32,8 +30,6 @@ export default function Home() {
             transition={{ duration: 0.2 }}
           >
             <HeroSection onStart={() => setShowChat(true)} />
-            <FeaturesSection />
-            <StatsSection />
           </motion.div>
         )}
       </AnimatePresence>

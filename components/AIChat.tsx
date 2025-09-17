@@ -12,7 +12,6 @@ import { MessageTransition, ThinkingTransition } from '@/components/Transitions'
 import { MarketAnalysis } from '@/components/MarketAnalysis';
 import { PortfolioOptimizer } from '@/components/PortfolioOptimizer';
 import { RewardsSystem } from '@/components/RewardsSystem';
-//import { FeatherProvider, useFeather, useFeatureShortcuts } from '@/components/FeatherProvider';
 
 interface Transaction {
   hash: string;
@@ -89,12 +88,15 @@ const PANELS: Record<string, PanelComponent> = {
 type PanelType = keyof typeof PANELS;
 
 const Sidebar = ({ activePanel, setActivePanel }: { 
-  activePanel: PanelType; 
-  setActivePanel: (panel: PanelType ) => void;
+  activePanel: PanelType | null; 
+  setActivePanel: (panel: PanelType | null ) => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const Icon = PANELS[activePanel].icon;
-  const Component = PANELS[activePanel].component;
+  const [panelPosition, setPanelPosition] = useState({ x: 64, y: 0 });
+  const [panelSize, setPanelSize] = useState({ width: 400, height: 100 });
+
+  const Icon = activePanel && PANELS[activePanel]?.icon;
+  const Component = activePanel && PANELS[activePanel]?.component;
 
   
   return (
@@ -118,10 +120,23 @@ const Sidebar = ({ activePanel, setActivePanel }: {
       <AnimatePresence>
         {activePanel && (
           <motion.div
+            drag
+            dragConstraints={{ left: 0, right: window.innerWidth - panelSize.width, top: 0, bottom: window.innerHeight - panelSize.height }}
+            dragElastic={0.2}
+            onDragEnd={(e, info) => {
+              setPanelPosition({ x: info.point.x, y: info.point.y });
+            }}
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
-            className={`fixed left-16 top-0 h-full bg-background/95 backdrop-blur-lg border-r border-border/50 ${
+            style={{
+              position: 'fixed',
+              left: panelPosition.x,
+              top: panelPosition.y,
+              width: panelSize.width,
+              height: panelSize.height,
+            }}
+            className={`bg-background/95 backdrop-blur-lg border-r border-border/50 ${
               isExpanded ? 'w-[800px]' : 'w-[400px]'
             }`}
           >
@@ -142,7 +157,7 @@ const Sidebar = ({ activePanel, setActivePanel }: {
                   )}
                 </button>
                 <button
-                  onClick={() => setActivePanel('rewards')}
+                  onClick={() => setActivePanel(null)}
                   className="p-2 hover:bg-primary/10 rounded-lg"
                 >
                   <X className="w-4 h-4" />
@@ -151,6 +166,17 @@ const Sidebar = ({ activePanel, setActivePanel }: {
             </div>
             <div className="p-4 h-[calc(100vh-65px)] overflow-y-auto">
               {Component && <Component />}
+            </div>
+
+            <div 
+              className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize group"
+            >
+              <div className="absolute bottom-0 right-0 w-full h-full 
+                border-b-2 border-r-2 border-primary/30 
+                group-hover:border-primary/50 
+                transition-colors duration-200 
+                opacity-50 group-hover:opacity-100"
+              />
             </div>
           </motion.div>
         )}
@@ -271,7 +297,7 @@ const messageContainsTrading = (content: string) => {
 export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
-    content: "Hi! I'm Feather AI. I can help manage your crypto assets, execute trades, and provide market insights. Would you like to connect a wallet to get started?",
+    content: "Hi! I'm S0. I can help manage your crypto assets, execute trades, and provide market insights. Would you like to connect a wallet to get started?",
     action: {
       type: 'connect_wallet'
     }
@@ -289,7 +315,7 @@ export default function AIChat() {
   const { startListening, stopListening, audioAnalysis, neuralRef } = useAI();
   const [isListening, setIsListening] = useState(false);
 
-  const [activePanel, setActivePanel] = useState<PanelType>('market');
+  const [activePanel, setActivePanel] = useState<PanelType | null>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -447,7 +473,7 @@ export default function AIChat() {
               <div className="border-b border-border/50 bg-card/80 p-4 backdrop-blur-sm">
                 <div className="flex items-center gap-2">
                   <Bot className="h-6 w-6 text-primary" />
-                  <span className="font-medium text-card-foreground">Feather AI Assistant</span>
+                  <span className="font-medium text-card-foreground">S0</span>
                 </div>
               </div>
 
@@ -509,7 +535,7 @@ export default function AIChat() {
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Message Feather AI..."
+                    placeholder="Message S0 AI..."
                     className="flex-1 rounded-xl border border-border bg-background px-4 py-3 
                              focus:outline-none focus:ring-2 focus:ring-primary dark:bg-card"
                     disabled={mode === 'thinking'}

@@ -1,7 +1,13 @@
-import React from 'react';
-import { Bot, ChartLine, Brain, Wallet } from 'lucide-react';
+import React, { FC } from 'react';
+import { LucideIcon, Bot, ChartLine, Brain, Wallet } from 'lucide-react';
 
-const FeatureCard = ({ title, description, icon: Icon }) => (
+type FeatureCardProps = {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+};
+
+const FeatureCard: FC<FeatureCardProps> = ({ title, description, icon: Icon }) => (
   <div className="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
     <div className="absolute -top-6 left-6">
       <div className="p-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg">

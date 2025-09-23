@@ -1,6 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSound } from 'use-sound';
 import { useAIStore } from '@/state/aiState';
 import type { Feedback } from '@/types/interactions';
 

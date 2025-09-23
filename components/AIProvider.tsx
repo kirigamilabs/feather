@@ -2,7 +2,6 @@
 import React, { createContext, useContext, useRef } from 'react';
 import { useNeuralAnimation } from '@/hooks/useNeuralAnimation';
 import { useAudio } from '@/hooks/useAudio';
-import { useAIStore } from '@/state/aiState';
 
 interface AIContextValue {
   neuralRef: React.RefObject<HTMLCanvasElement | null>;

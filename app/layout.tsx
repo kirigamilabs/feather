@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Feat.",
-  description: "Revolutionary decentralized platform integrating advanced AI capabilities for comprehensive crypto management, automation, and investment services.",
+  title: "kiri-gami",
+  description: "Revolutionary AI for crypto management, automation, and investment services.",
 };
 
 export default function RootLayout({

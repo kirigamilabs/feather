@@ -1,8 +1,12 @@
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 
+interface Action {
+  type: keyof typeof actionHandlers;
+  params: any;
+}
+
 interface ActionHandler {
-  type: string;
   execute: (params: any) => Promise<any>;
   validate?: (params: any) => boolean;
 }
@@ -57,7 +61,11 @@ export const useActionHandler = () => {
       const result = await handler.execute(action.params);
       return result;
     } catch (error) {
-      toast.error(`Action failed: ${error.message}`);
+      if (error instanceof Error) {
+        toast.error(`Action failed: ${error.message}`);
+      } else {
+        toast.error('An unknown error occurred');
+      }
       throw error;
     }
   }, []);

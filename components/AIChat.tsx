@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Bot, Wallet, Brain, RefreshCcw, LineChart, Mic, TrendingUp, Award,
-  X, ChevronLeft, ChevronRight } from 'lucide-react'
+  X, ChevronLeft, ChevronRight, StopCircle } from 'lucide-react'
 import { Button } from '@/components/Button'
 import { useAI } from '@/components/AIProvider';
 import { useAICore } from '@/hooks/useAICore';
@@ -20,24 +20,22 @@ interface Transaction {
   token: string;
 }
 
-interface MessageMetadata {
-  actions?: Action[];
-  transactions?: Transaction[];
+interface Action {
+  type: 'connect_wallet' | 'execute_trade' | 'analyze_market' | 'show_portfolio';
+  params?: any;
 }
 
 interface Message {
   role: 'user' | 'assistant'
   content: string
-  action?: {
-    type: 'connect_wallet' | 'execute_trade'
-    data?: any
-  }
-  metadata?: MessageMetadata;
-}
-
-interface Action {
-  type: 'connect_wallet' | 'execute_trade'
-  params: any
+  actions?: Action[];
+  metadata?: {
+    confidence?: number;
+    marketSentiment?: 'bullish' | 'bearish' | 'neutral';
+    riskLevel?: 'low' | 'moderate' | 'high';
+  };
+  isStreaming?: boolean;
+  transactions?: Transaction[];
 }
 
 // Clean panel system with proper layout
@@ -186,7 +184,9 @@ const ChatInterface = ({
   onSubmit, 
   mode,
   isListening,
-  onVoiceToggle 
+  onVoiceToggle,
+  onCancelProcessing,
+  onActionClick
 }: {
   messages: Message[];
   input: string;
@@ -195,12 +195,34 @@ const ChatInterface = ({
   mode: string;
   isListening: boolean;
   onVoiceToggle: () => void;
+  onCancelProcessing: () => void;
+  onActionClick: (action: Action) => void;
 }) => {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const getActionIcon = (actionType: string) => {
+    switch (actionType) {
+      case 'connect_wallet': return Wallet;
+      case 'execute_trade': return RefreshCcw;
+      case 'analyze_market': return LineChart;
+      case 'show_portfolio': return TrendingUp;
+      default: return Brain;
+    }
+  };
+
+  const getActionLabel = (actionType: string) => {
+    switch (actionType) {
+      case 'connect_wallet': return 'Connect Wallet';
+      case 'execute_trade': return 'Execute Trade';
+      case 'analyze_market': return 'Analyze Market';
+      case 'show_portfolio': return 'View Portfolio';
+      default: return actionType;
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -222,6 +244,12 @@ const ChatInterface = ({
             </motion.div>
             <div>
               <span className="font-medium text-card-foreground">S0 AI</span>
+              <p className="text-xs text-muted-foreground">
+                {mode === 'thinking' && 'Analyzing your request...'}
+                {mode === 'speaking' && 'Responding...'}
+                {mode === 'listening' && 'Listening...'}
+                {mode === 'observing' && 'Ready to help'}
+              </p>
             </div>
           </div>
           
@@ -244,53 +272,70 @@ const ChatInterface = ({
                 <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                   message.role === 'user' 
                     ? 'bg-gradient-to-r from-primary to-secondary text-white'
-                    : 'bg-card text-card-foreground shadow-sm'
+                    : 'bg-card text-card-foreground shadow-sm border border-border/50'
                 }`}>
-                  <div className="whitespace-pre-wrap">{message.content}</div>
-                  
-                  {/* Action Buttons */}
-                  {message.action && (
-                    <div className="mt-3 pt-2 border-t border-white/20">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="bg-white/10 hover:bg-white/20 border-white/30"
+                  {/* Message Content */}
+                  <div className="whitespace-pre-wrap">
+                    {message.content}
+                    {message.isStreaming && (
+                      <motion.span
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                        className="ml-1"
                       >
-                        {message.action.type === 'connect_wallet' ? (
-                          <>
-                            <Wallet className="h-4 w-4 mr-2" />
-                            Connect Wallet
-                          </>
-                        ) : (
-                          <>
-                            <RefreshCcw className="h-4 w-4 mr-2" />
-                            Execute Trade
-                          </>
-                        )}
-                      </Button>
+                        ▊
+                      </motion.span>
+                    )}
+                  </div>
+                  
+                  {/* Metadata Display */}
+                  {message.metadata && !message.isStreaming && (
+                    <div className="mt-2 pt-2 border-t border-border/20 text-xs opacity-75">
+                      {message.metadata.confidence && (
+                        <div className="flex items-center gap-2">
+                          <span>Confidence:</span>
+                          <div className="flex-1 h-1 bg-background/30 rounded-full">
+                            <motion.div
+                              className="h-full bg-green-500 rounded-full"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${message.metadata.confidence * 100}%` }}
+                            />
+                          </div>
+                          <span>{(message.metadata.confidence * 100).toFixed(0)}%</span>
+                        </div>
+                      )}
+                      {message.metadata.marketSentiment && (
+                        <div className="mt-1">
+                          Market: {message.metadata.marketSentiment} | Risk: {message.metadata.riskLevel}
+                        </div>
+                      )}
                     </div>
                   )}
-
-                  {/* Transaction Cards */}
-                  {message.metadata?.transactions?.map((tx, index) => (
-                    <div key={index} className="mt-3 bg-black/20 backdrop-blur rounded-lg p-3">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="font-medium text-sm">{tx.type}</div>
-                          <div className="text-xs opacity-80">
-                            {tx.amount} {tx.token}
-                          </div>
-                        </div>
-                        <div className={`text-xs px-2 py-1 rounded ${
-                          tx.status === 'confirmed' ? 'bg-green-500/20 text-green-300' :
-                          tx.status === 'pending' ? 'bg-yellow-500/20 text-yellow-300' :
-                          'bg-red-500/20 text-red-300'
-                        }`}>
-                          {tx.status}
-                        </div>
-                      </div>
+                  
+                  {/* Action Buttons */}
+                  {message.actions && !message.isStreaming && (
+                    <div className="mt-3 pt-2 border-t border-border/20 flex flex-wrap gap-2">
+                      {message.actions.map((action, actionIndex) => {
+                        const Icon = getActionIcon(action.type);
+                        return (
+                          <Button
+                            key={actionIndex}
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onActionClick(action)}
+                            className={`${
+                              message.role === 'user' 
+                                ? 'bg-white/10 hover:bg-white/20 border-white/30' 
+                                : 'border-border hover:bg-accent'
+                            }`}
+                          >
+                            <Icon className="h-4 w-4 mr-2" />
+                            {getActionLabel(action.type)}
+                          </Button>
+                        );
+                      })}
                     </div>
-                  ))}
+                  )}
                 </div>
               </motion.div>
             </MessageTransition>
@@ -317,34 +362,39 @@ const ChatInterface = ({
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Message S0 AI..."
+              placeholder={
+                mode === 'thinking' ? 'Processing...' : 
+                isListening ? 'Listening...' : 
+                'Message S0 AI...'
+              }
               className="w-full rounded-xl border border-border bg-background px-4 py-3 
                        focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
                        disabled:opacity-50 disabled:cursor-not-allowed
                        transition-all duration-200"
-              disabled={mode === 'thinking'}
+              disabled={mode === 'thinking' || isListening}
             />
-            {mode === 'thinking' && (
-              <div className="absolute inset-0 bg-background/50 backdrop-blur-sm rounded-xl 
-                            flex items-center justify-center">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                >
-                  <Brain className="h-5 w-5 text-primary" />
-                </motion.div>
-              </div>
-            )}
           </div>
           
-          <Button 
-            type="submit"
-            disabled={mode === 'thinking' || !input.trim()}
-            size="icon"
-            className="rounded-full bg-primary hover:bg-primary/90 disabled:opacity-50"
-          >
-            <Send className="h-5 w-5" />
-          </Button>
+          {mode === 'thinking' ? (
+            <Button 
+              type="button"
+              onClick={onCancelProcessing}
+              size="icon"
+              variant="destructive"
+              className="rounded-full"
+            >
+              <StopCircle className="h-5 w-5" />
+            </Button>
+          ) : (
+            <Button 
+              type="submit"
+              disabled={mode === 'thinking' || !input.trim() || isListening}
+              size="icon"
+              className="rounded-full bg-primary hover:bg-primary/90 disabled:opacity-50"
+            >
+              <Send className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </form>
     </div>
@@ -356,9 +406,7 @@ export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: "Hi! I'm S0. I can help manage your crypto assets, execute trades, and provide market insights. Would you like to connect a wallet to get started?",
-    action: {
-      type: 'connect_wallet'
-    }
+    actions: [{ type: 'connect_wallet' }]
   }]);
   
   const [input, setInput] = useState('');
@@ -381,23 +429,78 @@ export default function AIChat() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || mode === 'thinking') return;
+    if (!input.trim() || mode === 'thinking' || isListening) return;
 
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
+    
+    // Add streaming message placeholder
+    const streamingMessageId = Date.now();
+    setMessages(prev => [...prev, {
+      role: 'assistant',
+      content: '',
+      isStreaming: true
+    }]);
+    
     setInput('');
 
     try {
-      const response = await processInput(input);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: response
-      }]);
+      let streamingContent = '';
+      
+      await processInput(
+        input,
+        // Stream callback
+        (content: string, isComplete: boolean) => {
+          streamingContent += content;
+          setMessages(prev => prev.map((msg, idx) => 
+            idx === prev.length - 1 ? {
+              ...msg,
+              content: streamingContent,
+              isStreaming: !isComplete
+            } : msg
+          ));
+        },
+        // Actions callback
+        (actions: Action[]) => {
+          setMessages(prev => prev.map((msg, idx) => 
+            idx === prev.length - 1 ? {
+              ...msg,
+              actions
+            } : msg
+          ));
+        }
+      );
     } catch (error) {
-      setMessages(prev => [...prev, {
+      console.error('Chat error:', error);
+      setMessages(prev => prev.slice(0, -1).concat([{
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
-      }]);
+        content: 'Sorry, I encountered an error. Please try again.',
+        isStreaming: false
+      }]));
+    }
+  };
+
+  const handleCancelProcessing = () => {
+    // Optional: set some state or handle cancel logic if needed
+    console.log("Processing canceled");
+  };
+
+  const handleActionClick = (action: Action) => {
+    switch (action.type) {
+      case 'show_portfolio':
+        setActivePanel(activePanel === 'portfolio' ? null : 'portfolio');
+        break;
+      case 'analyze_market':
+        setActivePanel(activePanel === 'market' ? null : 'market');
+        break;
+      case 'connect_wallet':
+        // TODO: Trigger wallet connection
+        console.log('Connect wallet action');
+        break;
+      case 'execute_trade':
+        // TODO: Open trade execution modal/panel
+        console.log('Execute trade action');
+        break;
     }
   };
 
@@ -434,6 +537,8 @@ export default function AIChat() {
             mode={mode}
             isListening={isListening}
             onVoiceToggle={handleVoiceToggle}
+            onCancelProcessing={handleCancelProcessing}
+            onActionClick={handleActionClick}
           />
         </div>
       </div>

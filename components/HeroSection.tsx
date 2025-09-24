@@ -35,7 +35,7 @@ export default function HeroSection({ onStart }: HeroSectionProps) {
                 whileHover: { scale: 1.05 },
                 whileTap: { scale: 0.95 }
               }}
-              className="group font-semibold bg-gray-800"
+              className="group font-semibold bg-gray-700"
               >
               Coming Soon
               <motion.span

@@ -11,6 +11,22 @@ import { MarketAnalysis } from '@/components/MarketAnalysis';
 import { AccountPortfolio } from '@/components/AccountPortfolio';
 import { RewardsSystem } from '@/components/RewardsSystem';
 import { ThemeToggle, AIStatusDisplay, NeuralBackground } from '@/components/ThemeAIStatus';
+import { WalletConnect } from '@/components/WalletConnect';
+import { SendTransaction } from '@/components/SendTransaction';
+import { WalletPortfolio } from '@/components/WalletPortfolio';
+import { useWallet } from '@/hooks/useWallet';
+import { Web3StatusBar } from '@/components/Web3StatusBar';
+import { AIWeb3Integration } from '@/components/AIWeb3Integration';
+//<AIWeb3Integration
+//        onWalletConnected={(address) => {
+          // Auto-add message when wallet connects
+//          setMessages(prev => [...prev, {
+//            role: 'assistant',
+//            content: `Wallet connected: ${address.slice(0,6)}...${address.slice(-4)}`,
+//            actions: [{ type: 'show_portfolio' }]
+//          }]);
+//        }}
+//      />
 
 interface Transaction {
   hash: string;
@@ -53,6 +69,11 @@ const PANELS: Record<string, PanelComponent> = {
   },
   portfolio: {
     title: 'Portfolio',
+    icon: TrendingUp,
+    component: WalletPortfolio,
+  },
+  portfolio2: {
+    title: 'Portfolio2',
     icon: TrendingUp,
     component: AccountPortfolio,
   },
@@ -251,12 +272,14 @@ const ChatInterface = ({
                 {mode === 'observing' && 'Ready to help'}
               </p>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
             <AIStatusDisplay />
+            <Web3StatusBar />
+          </div>
+
+          <div className="flex items-center gap-3">
             <ThemeToggle />
           </div>
+
         </div>
       </div>
 
@@ -414,6 +437,10 @@ export default function AIChat() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
+  const [showWalletConnect, setShowWalletConnect] = useState(false);
+  const [showSendTransaction, setShowSendTransaction] = useState(false);
+  const { walletState } = useWallet();
+
   const { mode, processInput } = useAICore();
   const { startListening, stopListening, neuralRef } = useAI();
 
@@ -494,18 +521,21 @@ export default function AIChat() {
         setActivePanel(activePanel === 'market' ? null : 'market');
         break;
       case 'connect_wallet':
-        // TODO: Trigger wallet connection
-        console.log('Connect wallet action');
+        setShowWalletConnect(true);
         break;
       case 'execute_trade':
-        // TODO: Open trade execution modal/panel
-        console.log('Execute trade action');
+        if (walletState.isConnected) {
+          setShowSendTransaction(true);
+        } else {
+          setShowWalletConnect(true);
+        }
         break;
     }
   };
 
   return (
     <div className="h-screen flex bg-background overflow-hidden">
+
       {/* Background Effects */}
       <NeuralBackground />
       
@@ -545,6 +575,30 @@ export default function AIChat() {
 
       {/* Overlay Components */}
       <FeedbackSystem />
+
+      {/* Wallet Modals */}
+      <WalletConnect
+        isOpen={showWalletConnect}
+        onClose={() => setShowWalletConnect(false)}
+        onConnected={() => {
+          // Update AI context with wallet connection
+          const newMessage: Message = {
+            role: 'assistant',
+            content: `Great! Your wallet is now connected. I can see your address ${walletState.address ? `${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}` : ''} and balance. What would you like to do next?`,
+            actions: [
+              { type: 'show_portfolio' },
+              { type: 'analyze_market' },
+              { type: 'execute_trade' }
+            ]
+          };
+          setMessages(prev => [...prev, newMessage]);
+        }}
+      />
+      <SendTransaction
+        isOpen={showSendTransaction}
+        onClose={() => setShowSendTransaction(false)}
+      />
+      
     </div>
   );
 }

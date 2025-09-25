@@ -63,6 +63,7 @@ requests==2.32.5
 rich==14.1.0
 rlp==4.1.0
 six==1.17.0
+snekmate @ git+https://github.com/pcaversaccio/snekmate.git@307fc620000f70241a626d7ef4ec9c3183f26546
 sortedcontainers==2.4.0
 titanoboa==0.2.7
 toolz==1.0.0

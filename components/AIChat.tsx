@@ -51,20 +51,20 @@ interface PanelComponent {
 }
 
 const PANELS: Record<string, PanelComponent> = {
-  market: {
-    title: 'Market Analysis',
-    icon: LineChart,
-    component: MarketAnalysis,
+  wallet: {
+    title: 'Wallet',
+    icon: Wallet,
+    component: WalletPortfolio,
   },
   portfolio: {
     title: 'Portfolio',
     icon: TrendingUp,
-    component: WalletPortfolio,
-  },
-  portfolio2: {
-    title: 'Portfolio2',
-    icon: TrendingUp,
     component: AccountPortfolio,
+  },
+  market: {
+    title: 'Market Analysis',
+    icon: LineChart,
+    component: MarketAnalysis,
   },
   rewards: {
     title: 'Rewards',
@@ -262,10 +262,10 @@ const ChatInterface = ({
               </p>
             </div>
             <AIStatusDisplay />
-            <Web3StatusBar />
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex justify-between items-center px-4 py-2">
+            <Web3StatusBar />
             <ThemeToggle />
           </div>
 

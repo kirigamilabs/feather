@@ -16,17 +16,6 @@ import { SendTransaction } from '@/components/SendTransaction';
 import { WalletPortfolio } from '@/components/WalletPortfolio';
 import { useWallet } from '@/hooks/useWallet';
 import { Web3StatusBar } from '@/components/Web3StatusBar';
-import { AIWeb3Integration } from '@/components/AIWeb3Integration';
-//<AIWeb3Integration
-//        onWalletConnected={(address) => {
-          // Auto-add message when wallet connects
-//          setMessages(prev => [...prev, {
-//            role: 'assistant',
-//            content: `Wallet connected: ${address.slice(0,6)}...${address.slice(-4)}`,
-//            actions: [{ type: 'show_portfolio' }]
-//          }]);
-//        }}
-//      />
 
 interface Transaction {
   hash: string;

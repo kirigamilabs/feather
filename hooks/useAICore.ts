@@ -44,7 +44,7 @@ export const useAICore = () => {
     conversationHistoryRef.current.push({ role: 'user', content: input });
 
     try {
-      const response = await fetch('/api/ai/process', {
+      const response = await fetch('/api/ai/web3-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

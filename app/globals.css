@@ -1,48 +1,170 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+/* Root Variables */
 :root {
-  --background: hsl(0 0% 98%);
-  --foreground: hsl(0 0% 9%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(0 0% 9%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(0 0% 9%);
-  --primary: hsl(221.2 83.2% 53.3%);
-  --primary-foreground: hsl(210 40% 98%);
-  --secondary: hsl(280 100% 68%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(210 40% 96.1%);
-  --muted-foreground: hsl(215.4 16.3% 46.9%);
-  --accent: hsl(210 40% 96.1%);
-  --accent-foreground: hsl(222.2 47.4% 11.2%);
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(214.3 31.8% 91.4%);
-  --input: hsl(214.3 31.8% 91.4%);
-  --ring: hsl(221.2 83.2% 53.3%);
-  --radius: 0.75rem;
+  --background: #11142D; /* Deep space blue, warm and inviting */
+  --foreground: #E0E4E8; /* Soft silver/gray for readability */
+  --card: #1E2344; /* Darker card for depth, feels like a portal */
+  --card-foreground: #FFFFFF; /* Bright white text on cards for clarity */
+  --popover: #1E2344; /* Dark background for popover menus */
+  --popover-foreground: #E0E4E8; /* Light text on popovers for contrast */
+  
+  --primary: #6C5B9B; /* Mystical purple, signaling creativity and tech */
+  --primary-foreground: #FFFFFF; /* Clean white text on primary buttons/links */
+  
+  --secondary: #58C5D5; /* Aquatic teal for freshness, trust, and balance */
+  --secondary-foreground: #FFFFFF; /* Light text for contrast with secondary elements */
+  
+  --muted: #383D58; /* Slightly muted dark blue-gray for background components */
+  --muted-foreground: #A3A9D1; /* Softer gray text for muted elements */
+  
+  --accent: #FF7E67; /* Stellar orange-pink for accents, highlighting energy */
+  --accent-foreground: #FFFFFF; /* Bright text for accent buttons */
+  
+  --destructive: #D93F47; /* Fiery red for destructive elements */
+  --destructive-foreground: #FFFFFF; /* Bright text for destructive actions */
+  
+  --border: #3A4C69; /* Soft gradient border to evoke techy, modern designs */
+  --input: #2B3355; /* Soft, dark input fields for focus */
+  --ring: #6C5B9B; /* Glowing ring around focus areas, matching primary color */
+  
+  --radius: 0.75rem; /* Rounded corners for a soft, approachable feel */
 }
 
+/* Dark Theme Variables */
 .dark {
-  --background: hsl(240 10% 4%);
-  --foreground: hsl(0 0% 98%);
-  --card: hsl(240 10% 4%);
-  --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(240 10% 4%);
-  --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(217.2 91.2% 59.8%);
-  --primary-foreground: hsl(210 40% 98%);
-  --secondary: hsl(280 100% 68%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(217.2 32.6% 17.5%);
-  --muted-foreground: hsl(215 20.2% 65.1%);
-  --accent: hsl(217.2 32.6% 17.5%);
-  --accent-foreground: hsl(210 40% 98%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(217.2 32.6% 17.5%);
-  --input: hsl(217.2 32.6% 17.5%);
-  --ring: hsl(224.3 76.3% 48%);
+  --background: #101222; /* Darker background for immersive experience */
+  --foreground: #F0F1F6; /* Bright, near-white text for contrast in dark mode */
+  
+  --card: #1E2344; /* Deep space feel, same as light mode */
+  --card-foreground: #FFFFFF; /* Consistent white text */
+  
+  --popover: #1E2344; /* Consistent dark popover background */
+  --popover-foreground: #F0F1F6; /* Light text to pop against dark background */
+  
+  --primary: #6C5B9B; /* Purple remains for consistency, warmth, and trust */
+  --primary-foreground: #FFFFFF; /* Light text on buttons */
+  
+  --secondary: #58C5D5; /* Aquatic teal maintains a calming energy */
+  --secondary-foreground: #FFFFFF; /* Bright text on secondary elements */
+  
+  --muted: #2A3248; /* Darker muted tones for depth in dark mode */
+  --muted-foreground: #A3A9D1; /* Soft light text in dark mode */
+  
+  --accent: #FF7E67; /* Orange-pink accents feel vibrant in dark mode */
+  --accent-foreground: #FFFFFF; /* Bright text for a punch of contrast */
+  
+  --destructive: #D93F47; /* Fiery red pops in dark mode as well */
+  --destructive-foreground: #FFFFFF; /* Consistent bright text */
+  
+  --border: #2A3248; /* Darker border for cohesion in dark mode */
+  --input: #2B3355; /* Darker input field for focus */
+  --ring: #6C5B9B; /* Glowing focus ring in purple */
+}
+
+/* Global Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--secondary);
+}
+
+/* Buttons */
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+button.primary:hover {
+  background-color: var(--secondary);
+}
+
+button.secondary {
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+}
+
+button.secondary:hover {
+  background-color: var(--primary);
+}
+
+/* Input Fields */
+input,
+textarea,
+select {
+  background-color: var(--input);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  width: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+/* Cards */
+.card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Modals & Popovers */
+.popover {
+  background-color: var(--popover);
+  color: var(--popover-foreground);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.popover:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }

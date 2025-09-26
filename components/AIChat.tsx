@@ -51,25 +51,30 @@ interface PanelComponent {
 }
 
 const PANELS: Record<string, PanelComponent> = {
+  kiri: {
+    title: 'kiri',
+    icon: Award,
+    component: RewardsSystem,
+  },
+  gami: {
+    title: 'gami',
+    icon: Award,
+    component: RewardsSystem,
+  },
   wallet: {
-    title: 'Wallet',
+    title: 'wallet',
     icon: Wallet,
     component: WalletPortfolio,
   },
   portfolio: {
-    title: 'Portfolio',
+    title: 'portoflio',
     icon: TrendingUp,
     component: AccountPortfolio,
   },
   market: {
-    title: 'Market Analysis',
+    title: 'market analysis',
     icon: LineChart,
     component: MarketAnalysis,
-  },
-  rewards: {
-    title: 'Rewards',
-    icon: Award,
-    component: RewardsSystem,
   }
 };
 
@@ -102,7 +107,7 @@ const Sidebar = ({
             animate={{ opacity: 1 }}
             className="font-semibold text-sm"
           >
-            AI x Crypto
+            kiri-gami
           </motion.span>
         )}
         <Button

@@ -166,7 +166,7 @@ export const AISettings = () => {
         transition={{ delay: 0.4 }}
         className="mt-8 p-6 rounded-lg bg-gradient-to-r from-primary/5 to-purple-500/5 border border-primary/20"
       >
-        <h3 className="text-lg font-semibold mb-3">What's Coming</h3>
+        <h3 className="text-lg font-semibold mb-3">What&apos;s Coming</h3>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="flex items-center space-x-2">
             <span className="w-2 h-2 rounded-full bg-primary"></span>

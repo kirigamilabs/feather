@@ -161,7 +161,7 @@ export const Contact = () => {
               <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-xs font-semibold text-primary">1</span>
               </div>
-              <p>We'll review your inquiry and reach out within 48 hours</p>
+              <p>We&apos;ll review your inquiry and reach out within 48 hours</p>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">

@@ -247,9 +247,9 @@ export const AccountPortfolio = () => {
           <div className="flex items-center gap-3">
             <div className="text-2xl">{position.logo}</div>
             <div>
-              <h3 className="font-semibold flex items-center gap-2">
+              <h3 className="font-semibold flex items-center gap-2 break-words">
                 {position.protocol}
-                <span className="text-xs bg-secondary/20 px-2 py-1 rounded-full">
+                <span className="text-xs bg-secondary/20 px-2 py-1 rounded-full whitespace-nowrap">
                   {position.type}
                 </span>
               </h3>
@@ -264,7 +264,7 @@ export const AccountPortfolio = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Position</p>
-            <p className="font-medium">
+            <p className="font-medium break-words">
               {position.amount.toLocaleString()} {position.token}
             </p>
             <p className="text-sm text-muted-foreground">
@@ -319,11 +319,12 @@ export const AccountPortfolio = () => {
 
   return (
     <div className="space-y-6">
+      
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Portfolio Overview</h1>
-          <p className="text-muted-foreground">Track your DeFi positions and yields</p>
+          <h1 className="text-2xl font-bold break-words">Portfolio Overview</h1>
+          <p className="text-muted-foreground break-words">Track your DeFi positions and yields</p>
         </div>
         <div className="flex items-center gap-3">
           <TimeframeSelector />
@@ -333,6 +334,17 @@ export const AccountPortfolio = () => {
           </Button>
         </div>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="inline-block px-6 py-3 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30"
+      >
+        <span className="text-2xl font-semibold text-yellow-600 dark:text-yellow-400">
+          🚀 Coming Soon
+        </span>
+      </motion.div>
 
       {/* AI Analysis */}
       <AIInsights />

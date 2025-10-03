@@ -1,6 +1,6 @@
-# TBD AI Platform
+# KIRIGAMI AI Platform
 
-![S0 AI Logo](./public/DARKFEATHER.png)
+![S1 AI Logo](./public/DARKFEATHER.png)
 
 An advanced AI-driven crypto management platform that combines natural language processing with sophisticated portfolio management.
 

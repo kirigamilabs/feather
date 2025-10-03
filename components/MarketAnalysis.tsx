@@ -101,6 +101,17 @@ export const MarketAnalysis = () => {
         <TimeframeSelector />
       </div>
 
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="inline-block px-6 py-3 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30"
+      >
+        <span className="text-2xl font-semibold text-yellow-600 dark:text-yellow-400">
+          🚀 Coming Soon
+        </span>
+      </motion.div>
+
       <MarketChart data={[]} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

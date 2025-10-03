@@ -29,7 +29,7 @@ export default function Home() {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
           >
-            <HeroSection onStart={() => setShowChat(false)} />
+            <HeroSection onStart={() => setShowChat(true)} />
           </motion.div>
         )}
       </AnimatePresence>

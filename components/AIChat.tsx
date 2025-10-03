@@ -1,21 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Bot, Wallet, Brain, RefreshCcw, LineChart, Mic, TrendingUp, Award,
-  X, ChevronLeft, ChevronRight, StopCircle } from 'lucide-react'
+import { Send, Bot, Box, Boxes, Wallet, Brain, RefreshCcw, LineChart, Mic, TrendingUp, Award,
+  X, ChevronLeft, ChevronRight, StopCircle, Sparkles } from 'lucide-react'
 import { Button } from '@/components/Button'
 import { useAI } from '@/components/AIProvider';
 import { useAICore } from '@/hooks/useAICore';
 import { FeedbackSystem } from '@/components/InteractionFeedback'
 import { MessageTransition, ThinkingTransition } from '@/components/Transitions';
-import { MarketAnalysis } from '@/components/MarketAnalysis';
-import { AccountPortfolio } from '@/components/AccountPortfolio';
-import { RewardsSystem } from '@/components/RewardsSystem';
 import { ThemeToggle, AIStatusDisplay, NeuralBackground } from '@/components/ThemeAIStatus';
 import { WalletConnect } from '@/components/WalletConnect';
+import { useWallet } from '@/hooks/useWallet';
 import { SendTransaction } from '@/components/SendTransaction';
 import { WalletPortfolio } from '@/components/WalletPortfolio';
-import { useWallet } from '@/hooks/useWallet';
 import { Web3StatusBar } from '@/components/Web3StatusBar';
+//import { RewardsSystem } from '@/components/RewardsSystem';
+import { About } from '@/components/About';
+import { AISettings } from '@/components/AISettings';
+import { CryptoProducts } from '@/components/CryptoProducts';
+import { AccountPortfolio } from '@/components/AccountPortfolio';
+import { MarketAnalysis } from '@/components/MarketAnalysis';
+import { Contact } from '@/components/Contact';
 
 interface Transaction {
   hash: string;
@@ -51,31 +55,41 @@ interface PanelComponent {
 }
 
 const PANELS: Record<string, PanelComponent> = {
-  kiri: {
-    title: 'kiri',
-    icon: Award,
-    component: RewardsSystem,
-  },
-  gami: {
-    title: 'gami',
-    icon: Award,
-    component: RewardsSystem,
-  },
   wallet: {
     title: 'wallet',
     icon: Wallet,
     component: WalletPortfolio,
   },
+  kiri: {
+    title: 'ai',
+    icon: Box,
+    component: AISettings,
+  },
+  gami: {
+    title: 'crypto',
+    icon: Boxes,
+    component: CryptoProducts,
+  },
   portfolio: {
-    title: 'portoflio',
+    title: 'portfolio',
     icon: TrendingUp,
     component: AccountPortfolio,
   },
   market: {
-    title: 'market analysis',
+    title: 'market',
     icon: LineChart,
     component: MarketAnalysis,
-  }
+  },
+  about: {
+    title: 'about',
+    icon: Sparkles,
+    component: About,
+  },
+  contact: {
+    title: 'contact',
+    icon: Award,
+    component: Contact,
+  },
 };
 
 type PanelType = keyof typeof PANELS;
@@ -107,7 +121,7 @@ const Sidebar = ({
             animate={{ opacity: 1 }}
             className="font-semibold text-sm"
           >
-            kiri-gami
+            Kirigami
           </motion.span>
         )}
         <Button
@@ -162,7 +176,7 @@ const PanelContent = ({
   return (
     <motion.div
       initial={{ width: 0, opacity: 0 }}
-      animate={{ width: 400, opacity: 1 }}
+      animate={{ width: 500, opacity: 1 }}
       exit={{ width: 0, opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className="bg-background border-r border-border/50 flex flex-col overflow-hidden"
@@ -258,7 +272,7 @@ const ChatInterface = ({
               <Bot className="h-6 w-6 text-primary" />
             </motion.div>
             <div>
-              <span className="font-medium text-card-foreground">S0 AI</span>
+              <span className="font-medium text-card-foreground">S1 AI</span>
               <p className="text-xs text-muted-foreground">
                 {mode === 'thinking' && 'Analyzing your request...'}
                 {mode === 'speaking' && 'Responding...'}
@@ -382,7 +396,7 @@ const ChatInterface = ({
               placeholder={
                 mode === 'thinking' ? 'Processing...' : 
                 isListening ? 'Listening...' : 
-                'Message S0 AI...'
+                'Message S1 AI...'
               }
               className="w-full rounded-xl border border-border bg-background px-4 py-3 
                        focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
@@ -420,11 +434,16 @@ const ChatInterface = ({
 
 // Main component with clean layout
 export default function AIChat() {
-  const [messages, setMessages] = useState<Message[]>([{
-    role: 'assistant',
-    content: "Hi! I'm S0. I can help manage your crypto assets, execute trades, and provide market insights. Would you like to connect a wallet to get started?",
-    actions: [{ type: 'connect_wallet' }]
-  }]);
+  const { walletState } = useWallet();
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: 'assistant',
+      content: walletState.address 
+        ? `**Hey!** I'm S1 – Kirigami's AI for DeFi execution and strategy.\n\n**Wallet Connected:** \`${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}\`\n**Balance:** ${walletState.balance} ETH\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies. What's on your mind?`
+        : `**Hey!** I'm S1 – Kirigami's AI for DeFi execution and strategy.\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies.\n\n**Connect your wallet** to unlock portfolio analysis, transaction execution, and personalized recommendations.`,
+      actions: walletState.address ? [] : [{ type: 'connect_wallet' }]
+    }
+  ]);
   
   const [input, setInput] = useState('');
   const [activePanel, setActivePanel] = useState<PanelType | null>(null);
@@ -433,7 +452,6 @@ export default function AIChat() {
 
   const [showWalletConnect, setShowWalletConnect] = useState(false);
   const [showSendTransaction, setShowSendTransaction] = useState(false);
-  const { walletState } = useWallet();
 
   const { mode, processInput } = useAICore();
   const { startListening, stopListening, neuralRef } = useAI();

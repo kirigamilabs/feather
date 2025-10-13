@@ -147,6 +147,7 @@ export async function POST(request: NextRequest) {
             IMPORTANT: Your response style should adapt based on user sophistication level. 
             For new users, explain concepts. 
             For experienced users, dive deeper into strategies.
+            NOTE: You only have 500 tokens to reply.
             `;
 
           const messages = [

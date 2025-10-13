@@ -2,169 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Root Variables */
 :root {
-  --background: #11142D; /* Deep space blue, warm and inviting */
-  --foreground: #E0E4E8; /* Soft silver/gray for readability */
-  --card: #1E2344; /* Darker card for depth, feels like a portal */
-  --card-foreground: #FFFFFF; /* Bright white text on cards for clarity */
-  --popover: #1E2344; /* Dark background for popover menus */
-  --popover-foreground: #E0E4E8; /* Light text on popovers for contrast */
-  
-  --primary: #6C5B9B; /* Mystical purple, signaling creativity and tech */
-  --primary-foreground: #FFFFFF; /* Clean white text on primary buttons/links */
-  
-  --secondary: #58C5D5; /* Aquatic teal for freshness, trust, and balance */
-  --secondary-foreground: #FFFFFF; /* Light text for contrast with secondary elements */
-  
-  --muted: #383D58; /* Slightly muted dark blue-gray for background components */
-  --muted-foreground: #A3A9D1; /* Softer gray text for muted elements */
-  
-  --accent: #FF7E67; /* Stellar orange-pink for accents, highlighting energy */
-  --accent-foreground: #FFFFFF; /* Bright text for accent buttons */
-  
-  --destructive: #D93F47; /* Fiery red for destructive elements */
-  --destructive-foreground: #FFFFFF; /* Bright text for destructive actions */
-  
-  --border: #3A4C69; /* Soft gradient border to evoke techy, modern designs */
-  --input: #2B3355; /* Soft, dark input fields for focus */
-  --ring: #6C5B9B; /* Glowing ring around focus areas, matching primary color */
-  
-  --radius: 0.75rem; /* Rounded corners for a soft, approachable feel */
+  --background: hsl(210 40% 98%);
+  --foreground: hsl(210 20% 15%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(210 20% 15%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(210 20% 15%);
+  --primary: hsl(210 100% 45%);
+  --primary-foreground: hsl(210 40% 98%);
+  --secondary: hsl(200 80% 55%);
+  --secondary-foreground: hsl(210 40% 98%);
+  --muted: hsl(210 30% 92%);
+  --muted-foreground: hsl(210 15% 50%);
+  --accent: hsl(195 90% 50%);
+  --accent-foreground: hsl(210 40% 98%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --border: hsl(210 50% 88%);
+  --input: hsl(210 50% 88%);
+  --ring: hsl(210 100% 45%);
+  --radius: 0.75rem;
 }
 
-/* Dark Theme Variables */
 .dark {
-  --background: #101222; /* Darker background for immersive experience */
-  --foreground: #F0F1F6; /* Bright, near-white text for contrast in dark mode */
-  
-  --card: #1E2344; /* Deep space feel, same as light mode */
-  --card-foreground: #FFFFFF; /* Consistent white text */
-  
-  --popover: #1E2344; /* Consistent dark popover background */
-  --popover-foreground: #F0F1F6; /* Light text to pop against dark background */
-  
-  --primary: #6C5B9B; /* Purple remains for consistency, warmth, and trust */
-  --primary-foreground: #FFFFFF; /* Light text on buttons */
-  
-  --secondary: #58C5D5; /* Aquatic teal maintains a calming energy */
-  --secondary-foreground: #FFFFFF; /* Bright text on secondary elements */
-  
-  --muted: #2A3248; /* Darker muted tones for depth in dark mode */
-  --muted-foreground: #A3A9D1; /* Soft light text in dark mode */
-  
-  --accent: #FF7E67; /* Orange-pink accents feel vibrant in dark mode */
-  --accent-foreground: #FFFFFF; /* Bright text for a punch of contrast */
-  
-  --destructive: #D93F47; /* Fiery red pops in dark mode as well */
-  --destructive-foreground: #FFFFFF; /* Consistent bright text */
-  
-  --border: #2A3248; /* Darker border for cohesion in dark mode */
-  --input: #2B3355; /* Darker input field for focus */
-  --ring: #6C5B9B; /* Glowing focus ring in purple */
-}
-
-/* Global Styles */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-}
-
-a {
-  color: var(--primary);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: var(--secondary);
-}
-
-/* Buttons */
-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button.primary {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-}
-
-button.primary:hover {
-  background-color: var(--secondary);
-}
-
-button.secondary {
-  background-color: var(--secondary);
-  color: var(--secondary-foreground);
-}
-
-button.secondary:hover {
-  background-color: var(--primary);
-}
-
-/* Input Fields */
-input,
-textarea,
-select {
-  background-color: var(--input);
-  color: var(--foreground);
-  border: 1px solid var(--border);
-  padding: 0.75rem;
-  border-radius: var(--radius);
-  width: 100%;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--ring);
-  box-shadow: 0 0 0 2px var(--ring);
-}
-
-/* Cards */
-.card {
-  background-color: var(--card);
-  color: var(--card-foreground);
-  border-radius: var(--radius);
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: box-shadow 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-}
-
-/* Modals & Popovers */
-.popover {
-  background-color: var(--popover);
-  color: var(--popover-foreground);
-  border-radius: var(--radius);
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.popover:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  --background: hsl(210 30% 8%);
+  --foreground: hsl(210 20% 95%);
+  --card: hsl(210 25% 12%);
+  --card-foreground: hsl(210 20% 95%);
+  --popover: hsl(210 25% 12%);
+  --popover-foreground: hsl(210 20% 95%);
+  --primary: hsl(210 90% 55%);
+  --primary-foreground: hsl(210 20% 10%);
+  --secondary: hsl(200 75% 60%);
+  --secondary-foreground: hsl(210 20% 10%);
+  --muted: hsl(210 25% 25%);
+  --muted-foreground: hsl(210 20% 70%);
+  --accent: hsl(195 85% 58%);
+  --accent-foreground: hsl(210 20% 10%);
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --border: hsl(210 30% 22%);
+  --input: hsl(210 30% 22%);
+  --ring: hsl(210 90% 55%);
 }

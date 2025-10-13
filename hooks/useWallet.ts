@@ -61,7 +61,7 @@ export const useWallet = () => {
       isConnected,
       address,
       balance: balance ? formatEther(balance.value) : undefined,
-      chainId: 1, //TODO
+      chainId: 11155111, //TODO
       connector
     };
     

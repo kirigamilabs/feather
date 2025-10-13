@@ -56,7 +56,7 @@ export const WalletPortfolio: React.FC = () => {
 
   // Calculate total portfolio value
   const totalValue = React.useMemo(() => {
-    const ethValue = ethBalance ? parseFloat(formatEther(ethBalance.value)) * 3000 : 0; // Mock ETH price
+    const ethValue = ethBalance ? parseFloat(formatEther(ethBalance.value)) * 4500 : 0; // Mock ETH price
     const tokenValue = tokenBalances.reduce((sum, token) => sum + token.value, 0);
     return ethValue + tokenValue;
   }, [ethBalance, tokenBalances]);
@@ -98,6 +98,7 @@ export const WalletPortfolio: React.FC = () => {
             <p className="font-medium">
               {walletState.chainId === 1 ? 'Ethereum' : 
                walletState.chainId === 8453 ? 'Base' : 
+               walletState.chainId === 11155111 ? 'Sepolia' : 
                'Unknown'}
             </p>
           </div>

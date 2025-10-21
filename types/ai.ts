@@ -29,7 +29,7 @@ export interface AIResponse {
 }
 
 export interface Action {
-  type: 'connect_wallet' | 'execute_trade' | 'analyze_market' | 'show_portfolio' | 'optimize_portfolio';
+  type: 'connect_wallet' | 'execute_trade' | 'analyze_market' | 'show_wallet' | 'optimize_portfolio';
   params?: any;
   priority?: 'low' | 'medium' | 'high';
   description?: string;

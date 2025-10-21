@@ -11,8 +11,9 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/Button';
 import { useWallet } from '@/hooks/useWallet';
-import { useBalance, useToken } from 'wagmi';
+import { useBalance } from 'wagmi';
 import { formatEther, formatUnits } from 'viem';
+import { SendTransaction } from '@/components/SendTransaction';
 
 interface TokenBalance {
   symbol: string;
@@ -125,6 +126,10 @@ export const WalletPortfolio: React.FC = () => {
             <Send className="w-4 h-4 mr-2" />
             Send
           </Button>
+          <SendTransaction
+            isOpen={showSendModal}
+            onClose={() => setShowSendModal(false)}
+          />
         </div>
 
         {/* ETH Balance */}

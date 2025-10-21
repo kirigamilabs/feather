@@ -26,7 +26,7 @@ export interface AnalysisAction {
 }
 
 export interface PortfolioAction {
-  type: 'show_portfolio';
+  type: 'show_wallet';
   params?: {
     view?: 'overview' | 'positions' | 'history' | 'analytics';
   };

@@ -7,7 +7,7 @@ interface StreamedResponse {
   mode?: 'thinking' | 'speaking' | 'observing';
   confidence?: number;
   actions?: Array<{
-    type: 'connect_wallet' | 'execute_trade' | 'analyze_market' | 'show_portfolio';
+    type: 'connect_wallet' | 'execute_trade' | 'analyze_market' | 'show_wallet';
     params?: any;
   }>;
   metadata?: any;

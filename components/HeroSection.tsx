@@ -19,15 +19,16 @@ export default function HeroSection({ onStart }: HeroSectionProps) {
           className="mx-auto max-w-3xl text-center"
         >
           <h1 className="mt-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-4xl sm:text-6xl">
-            Kirigami
+            Kirigami AI
           </h1>
           
           <p className="mt-6 text-lg text-muted-foreground sm:text-xl bg-transparent">
-            AI x Crypto management, automation, and investment services.
+            with Crypto management, automation, and investment services.
           </p>
           
           <div className="mt-10 flex gap-4 sm:flex-row justify-center">
             <Button 
+              variant="action"
               onClick={onStart} 
               size="lg" 
               withAnimation

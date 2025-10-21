@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Wallet, 
@@ -34,13 +34,30 @@ export const WalletConnect: React.FC<WalletConnectProps> = ({
   } = useWallet();
 
   const [showConnectors, setShowConnectors] = useState(false);
+  const prevConnectedRef = useRef(false);
+  const hasCalledOnConnected = useRef(false);
 
-  const handleConnect = async (connectorType?: 'metamask' | 'walletconnect') => {
-    const success = await connectWallet(connectorType);
-    if (success) {
+  // Watch for wallet connection state changes
+  useEffect(() => {
+    // Only trigger onConnected when transitioning from disconnected to connected
+    if (walletState.isConnected && !prevConnectedRef.current && !hasCalledOnConnected.current) {
+      hasCalledOnConnected.current = true;
       onConnected?.();
       setTimeout(onClose, 1000); // Auto-close after success
     }
+    prevConnectedRef.current = walletState.isConnected;
+  }, [walletState.isConnected, onConnected, onClose]);
+
+  // Reset the flag when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      hasCalledOnConnected.current = false;
+    }
+  }, [isOpen]);
+
+  const handleConnect = async (connectorType?: 'metamask' | 'walletconnect') => {
+    await connectWallet(connectorType);
+    // Don't call onConnected here - let the useEffect handle it
   };
 
   const copyAddress = () => {

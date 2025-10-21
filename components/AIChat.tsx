@@ -29,7 +29,7 @@ interface Transaction {
 }
 
 interface Action {
-  type: 'connect_wallet' | 'execute_trade' | 'analyze_market' | 'show_portfolio';
+  type: 'connect_wallet' | 'execute_trade' | 'analyze_market' | 'show_wallet';
   params?: any;
 }
 
@@ -296,7 +296,7 @@ const ChatInterface = ({
       case 'connect_wallet': return Wallet;
       case 'execute_trade': return RefreshCcw;
       case 'analyze_market': return LineChart;
-      case 'show_portfolio': return TrendingUp;
+      case 'show_wallet': return TrendingUp;
       default: return Brain;
     }
   };
@@ -306,7 +306,7 @@ const ChatInterface = ({
       case 'connect_wallet': return 'Connect Wallet';
       case 'execute_trade': return 'Execute Trade';
       case 'analyze_market': return 'Analyze Market';
-      case 'show_portfolio': return 'View Portfolio';
+      case 'show_wallet': return 'View Wallet';
       default: return actionType;
     }
   };
@@ -339,7 +339,7 @@ const ChatInterface = ({
               <Bot className="h-6 w-6 text-primary" />
             </motion.div>
             <div className="min-w-0">
-              <span className="font-medium text-card-foreground text-sm md:text-base">S1 AI</span>
+              <span className="font-medium text-card-foreground text-sm md:text-base">Kirigami AI</span>
               <p className="text-xs text-muted-foreground truncate">
                 {mode === 'thinking' && 'Analyzing...'}
                 {mode === 'speaking' && 'Responding...'}
@@ -463,7 +463,7 @@ const ChatInterface = ({
               placeholder={
                 mode === 'thinking' ? 'Processing...' : 
                 isListening ? 'Listening...' : 
-                'Message S1 AI...'
+                'Message AI...'
               }
               className="w-full rounded-xl border border-border bg-background px-3 md:px-4 py-2 md:py-3 text-sm md:text-base
                        focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
@@ -506,8 +506,8 @@ export default function AIChat() {
     {
       role: 'assistant',
       content: walletState.address 
-        ? `**Hey!** I'm S1 – Kirigami's AI for DeFi execution and strategy.\n\n**Wallet Connected:** \`${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}\`\n**Balance:** ${walletState.balance} ETH\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies. What's on your mind?`
-        : `**Hey!** I'm S1 – Kirigami's AI for DeFi execution and strategy.\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies.\n\n**Connect your wallet** to unlock portfolio analysis, transaction execution, and personalized recommendations.`,
+        ? `**Hey!** I'm Kirigami AI with DeFi execution and strategy.\n\n**Wallet Connected:** \`${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}\`\n**Balance:** ${walletState.balance} ETH\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies. What's on your mind?`
+        : `**Hey!** I'm Kirigami AI with DeFi execution and strategy.\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies.\n\n**Connect your wallet** to unlock portfolio analysis, transaction execution, and personalized recommendations.`,
       actions: walletState.address ? [] : [{ type: 'connect_wallet' }]
     }
   ]);
@@ -588,8 +588,8 @@ export default function AIChat() {
 
   const handleActionClick = (action: Action) => {
     switch (action.type) {
-      case 'show_portfolio':
-        setActivePanel(activePanel === 'portfolio' ? null : 'portfolio');
+      case 'show_wallet':
+        setActivePanel(activePanel === 'wallet' ? null : 'wallet');
         setMobileNavOpen(false);
         break;
       case 'analyze_market':
@@ -670,7 +670,7 @@ export default function AIChat() {
             role: 'assistant',
             content: `Great! Your wallet is now connected. I can see your address ${walletState.address ? `${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}` : ''} and balance. What would you like to do next?`,
             actions: [
-              { type: 'show_portfolio' },
+              { type: 'show_wallet' },
               { type: 'analyze_market' },
               { type: 'execute_trade' }
             ]

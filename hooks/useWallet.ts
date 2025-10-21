@@ -7,7 +7,8 @@ import {
   useDisconnect,
   useSendTransaction,
   useWaitForTransactionReceipt,
-  useSignMessage
+  useSignMessage,
+  useSwitchChain
 } from 'wagmi';
 import { parseEther, formatEther, isAddress } from 'viem';
 import { useAIStore } from '@/state/aiState';
@@ -27,6 +28,20 @@ interface SendTransactionParams {
   data?: string;
 }
 
+// Network configuration - Easy to disable/enable
+const NETWORK_CONFIG = {
+  enabled: true, // Set to false to disable network switching
+  targetChainId: 11155111, // Sepolia testnet
+  chainName: 'Sepolia test network',
+  rpcUrls: ['https://rpc.sepolia.org'],
+  blockExplorerUrls: ['https://sepolia.etherscan.io'],
+  nativeCurrency: {
+    name: 'Sepolia ETH',
+    symbol: 'SepoliaETH',
+    decimals: 18
+  }
+};
+
 export const useWallet = () => {
   const [walletState, setWalletState] = useState<WalletState>({
     isConnected: false
@@ -35,12 +50,13 @@ export const useWallet = () => {
   const { updateContext } = useAIStore();
   
   // Wagmi hooks
-  const { address, isConnected, connector } = useAccount();
+  const { address, isConnected, connector, chain } = useAccount();
   const { data: balance } = useBalance({ 
     address: address as `0x${string}` | undefined 
   });
   const { connectors, connect, isPending: isConnecting } = useConnect();
   const { disconnect } = useDisconnect();
+  const { switchChain, chains } = useSwitchChain();
   const { 
     sendTransaction, 
     data: hash, 
@@ -55,13 +71,16 @@ export const useWallet = () => {
     isSuccess: isConfirmed 
   } = useWaitForTransactionReceipt({ hash });
 
+  // Track if we've already checked network on this connection
+  const [hasCheckedNetwork, setHasCheckedNetwork] = useState(false);
+
   // Update wallet state when connection changes
   useEffect(() => {
     const newState: WalletState = {
       isConnected,
       address,
       balance: balance ? formatEther(balance.value) : undefined,
-      chainId: 11155111, //TODO
+      chainId: chain?.id,
       connector
     };
     
@@ -81,10 +100,60 @@ export const useWallet = () => {
       updateContext({
         wallet: { connected: false }
       });
+      // Reset network check flag when disconnected
+      setHasCheckedNetwork(false);
     }
-  }, [isConnected, address, balance, connector, updateContext]);
+  }, [isConnected, address, balance, chain, connector, updateContext]);
 
-  // Connect wallet
+  // Ensure correct network
+  const ensureCorrectNetwork = useCallback(async () => {
+    if (!NETWORK_CONFIG.enabled) return true;
+    
+    if (!isConnected || !chain) {
+      console.log('Wallet not connected or chain not available');
+      return false;
+    }
+
+    // Check if already on correct network
+    if (chain.id === NETWORK_CONFIG.targetChainId) {
+      console.log(`Already on ${NETWORK_CONFIG.chainName}`);
+      return true;
+    }
+
+    // Check if the target chain is available in wagmi config
+    const targetChain = chains.find(c => c.id === NETWORK_CONFIG.targetChainId);
+    
+    if (!targetChain) {
+      console.error(`Chain ${NETWORK_CONFIG.targetChainId} not found in wagmi config`);
+      return false;
+    }
+
+    try {
+      console.log(`Switching to ${NETWORK_CONFIG.chainName}...`);
+      await switchChain({ chainId: NETWORK_CONFIG.targetChainId });
+      return true;
+    } catch (error: any) {
+      console.error('Failed to switch network:', error);
+      
+      // If user rejected or other error, still return false but don't crash
+      if (error.message?.includes('User rejected')) {
+        console.log('User rejected network switch');
+      }
+      
+      return false;
+    }
+  }, [isConnected, chain, switchChain, chains]);
+
+    // Auto-switch network when wallet connects
+  useEffect(() => {
+    if (isConnected && chain && !hasCheckedNetwork) {
+      setHasCheckedNetwork(true);
+      ensureCorrectNetwork();
+    }
+  }, [isConnected, chain, hasCheckedNetwork, ensureCorrectNetwork]);
+
+
+  // Connect wallet with automatic network switching
   const connectWallet = useCallback(async (connectorType?: 'metamask' | 'walletconnect' | 'injected') => {
     try {
       let targetConnector = connectors[0]; // Default to first available
@@ -96,22 +165,36 @@ export const useWallet = () => {
       }
       
       await connect({ connector: targetConnector });
+      
+      // Give the connection a moment to establish before checking network
+      setTimeout(async () => {
+        await ensureCorrectNetwork();
+      }, 500);
+      
       return true;
     } catch (error) {
       console.error('Failed to connect wallet:', error);
       return false;
     }
-  }, [connectors, connect]);
+  }, [connectors, connect, ensureCorrectNetwork]);
 
   // Disconnect wallet
   const disconnectWallet = useCallback(() => {
     disconnect();
   }, [disconnect]);
 
-  // Send ETH transaction - FIXED to return a Promise<string>
+  // Send ETH transaction - with network check
   const sendETH = useCallback(async (params: SendTransactionParams): Promise<string> => {
     if (!isConnected || !address) {
       throw new Error('Wallet not connected');
+    }
+
+    // Ensure on correct network before sending
+    if (NETWORK_CONFIG.enabled) {
+      const onCorrectNetwork = await ensureCorrectNetwork();
+      if (!onCorrectNetwork) {
+        throw new Error(`Please switch to ${NETWORK_CONFIG.chainName} network`);
+      }
     }
 
     if (!isAddress(params.to)) {
@@ -130,8 +213,8 @@ export const useWallet = () => {
         const checkForHash = (attempts = 0) => {
           if (hash) {
             resolve(hash);
-          } else if (attempts < 50) { // Wait up to 5 seconds
-            setTimeout(() => checkForHash(attempts + 1), 100);
+          } else if (attempts < 750) { // Wait up to 150 seconds
+            setTimeout(() => checkForHash(attempts + 1), 200);
           } else {
             reject(new Error('Transaction hash not received within timeout'));
           }
@@ -145,12 +228,20 @@ export const useWallet = () => {
         reject(error);
       }
     });
-  }, [isConnected, address, sendTransaction, hash]);
+  }, [isConnected, address, sendTransaction, hash, ensureCorrectNetwork]);
 
-  // Sign message
+  // Sign message - with network check
   const signMessageAsync = useCallback(async (message: string) => {
     if (!isConnected) {
       throw new Error('Wallet not connected');
+    }
+
+    // Ensure on correct network before signing
+    if (NETWORK_CONFIG.enabled) {
+      const onCorrectNetwork = await ensureCorrectNetwork();
+      if (!onCorrectNetwork) {
+        throw new Error(`Please switch to ${NETWORK_CONFIG.chainName} network for signing`);
+      }
     }
 
     try {
@@ -160,7 +251,7 @@ export const useWallet = () => {
       console.error('Message signing failed:', error);
       throw error;
     }
-  }, [isConnected, signMessage, signature]);
+  }, [isConnected, signMessage, signature, ensureCorrectNetwork]);
 
   // Get transaction status
   const getTransactionStatus = useCallback(() => {
@@ -187,9 +278,14 @@ export const useWallet = () => {
     disconnectWallet,
     sendETH,
     signMessage: signMessageAsync,
+    ensureCorrectNetwork, // Expose for manual checks if needed
     
     // Utilities
     getTransactionStatus,
-    connectors
+    connectors,
+    
+    // Network info
+    currentChainId: chain?.id,
+    isCorrectNetwork: NETWORK_CONFIG.enabled ? chain?.id === NETWORK_CONFIG.targetChainId : true
   };
 };

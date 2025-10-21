@@ -9,7 +9,7 @@ export default function Home() {
   const [showChat, setShowChat] = useState(false)
 
   return (
-    <main className="min-h-screen">
+    <main className="h-screen overflow-hidden fixed inset-0">
       <AnimatePresence mode="wait">
         {showChat ? (
           <motion.div

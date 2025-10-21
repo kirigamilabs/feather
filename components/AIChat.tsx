@@ -312,7 +312,7 @@ const ChatInterface = ({
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-background">
+    <div className="flex flex-col h-full w-full bg-background absolute inset-0">
       {/* Chat Header */}
       <div className="border-b border-border/50 bg-card/30 backdrop-blur-sm p-3 md:p-4 flex-shrink-0">
         <div className="flex items-center justify-between gap-3">
@@ -362,7 +362,7 @@ const ChatInterface = ({
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-4">
+      <div className="flex-1 overflow-y-scroll touch-action-pan-y p-3 md:p-4 space-y-4 pb-40 md:pb-32">
         <AnimatePresence mode="popLayout">
           {messages.map((message, i) => (
             <MessageTransition key={i}>
@@ -507,7 +507,7 @@ export default function AIChat() {
       role: 'assistant',
       content: walletState.address 
         ? `**Hey!** I'm Kirigami AI with DeFi execution and strategy.\n\n**Wallet Connected:** \`${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}\`\n**Balance:** ${walletState.balance} ETH\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies. What's on your mind?`
-        : `**Hey!** I'm Kirigami AI with DeFi execution and strategy.\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies.\n\n**Connect your wallet** to unlock portfolio analysis, transaction execution, and personalized recommendations.`,
+        : `**Hey!** I'm Kirigami AI with DeFi execution and strategy. Coming Soon. \n\nI will be able to execute trades, analyze protocols, optimize yields, and help you navigate complex strategies.\n\n**Connect your wallet** to unlock portfolio analysis, transaction execution, and personalized recommendations.`,
       actions: walletState.address ? [] : [{ type: 'connect_wallet' }]
     }
   ]);

@@ -48,3 +48,8 @@
   --input: hsl(265 40% 20%);
   --ring: hsl(185 100% 45%);
 }
+
+body {
+  overscroll-behavior-y: none;
+  touch-action: pan-x pan-y;
+}

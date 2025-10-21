@@ -362,7 +362,7 @@ const ChatInterface = ({
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-scroll touch-action-pan-y p-3 md:p-4 space-y-4 pb-40 md:pb-32">
+      <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-4 pb-40">
         <AnimatePresence mode="popLayout">
           {messages.map((message, i) => (
             <MessageTransition key={i}>

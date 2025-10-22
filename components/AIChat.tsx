@@ -19,6 +19,7 @@ import { CryptoProducts } from '@/components/CryptoProducts';
 import { AccountPortfolio } from '@/components/AccountPortfolio';
 import { MarketAnalysis } from '@/components/MarketAnalysis';
 import { Contact } from '@/components/Contact';
+import { DisclaimerBanner } from '@/components/Disclaimer';
 
 interface Transaction {
   hash: string;
@@ -661,6 +662,7 @@ export default function AIChat() {
       />
 
       {/* Overlays */}
+      <DisclaimerBanner/>
       <FeedbackSystem />
       <WalletConnect
         isOpen={showWalletConnect}

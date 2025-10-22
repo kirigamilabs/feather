@@ -26,7 +26,7 @@ interface AIResponse {
 }
 
 // Default system prompt
-const DEFAULT_SYSTEM_PROMPT = `You are Kirigami's AI intelligence layer, providing Crypto and DeFi execution with expertise while identifying opportunities for deeper human consultation.
+const DEFAULT_SYSTEM_PROMPT = `You are Suguru AI, providing Crypto and DeFi execution with expertise while identifying opportunities for deeper human consultation.
 
 CORE IDENTITY:
 - Proactive: Don't just answer - anticipate needs
@@ -74,7 +74,7 @@ const promptStore = new Map<string, { id: string; name: string; content: string;
 // Initialize with default
 promptStore.set('default', {
   id: 'default',
-  name: 'Kirigami AI',
+  name: 'Suguru AI',
   content: DEFAULT_SYSTEM_PROMPT,
   createdAt: Date.now()
 });

@@ -340,7 +340,7 @@ const ChatInterface = ({
               <Bot className="h-6 w-6 text-primary" />
             </motion.div>
             <div className="min-w-0">
-              <span className="font-medium text-card-foreground text-sm md:text-base">Kirigami AI</span>
+              <span className="font-medium text-card-foreground text-sm md:text-base">Suguru AI</span>
               <p className="text-xs text-muted-foreground truncate">
                 {mode === 'thinking' && 'Analyzing...'}
                 {mode === 'speaking' && 'Responding...'}
@@ -507,8 +507,8 @@ export default function AIChat() {
     {
       role: 'assistant',
       content: walletState.address 
-        ? `**Hey!** I'm Kirigami AI with DeFi execution and strategy.\n\n**Wallet Connected:** \`${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}\`\n**Balance:** ${walletState.balance} ETH\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies. What's on your mind?`
-        : `**Hey!** I'm Kirigami AI with DeFi execution and strategy. Coming Soon. \n\nI will be able to execute trades, analyze protocols, optimize yields, and help you navigate complex strategies.\n\n**Connect your wallet** to unlock portfolio analysis, transaction execution, and personalized recommendations.`,
+        ? `**Hey!** I'm Suguru AI with DeFi execution and strategy.\n\n**Wallet Connected:** \`${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}\`\n**Balance:** ${walletState.balance} ETH\n\nI can execute trades, analyze protocols, optimize yields, and help you navigate complex strategies. What's on your mind?`
+        : `**Hey!** I'm Suguru AI with DeFi execution and strategy. Coming Soon. \n\nI will be able to execute trades, analyze protocols, optimize yields, and help you navigate complex strategies.\n\n**Connect your wallet** to unlock portfolio analysis, transaction execution, and personalized recommendations.`,
       actions: walletState.address ? [] : [{ type: 'connect_wallet' }]
     }
   ]);

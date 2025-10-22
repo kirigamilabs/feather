@@ -20,7 +20,7 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   title: "Kirigami",
-  description: "AI x Crypto management, automation, and investment services.",
+  description: "AI x Crypto.",
 };
 
 export default function RootLayout({

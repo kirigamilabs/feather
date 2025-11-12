@@ -55,18 +55,48 @@ DeFi KNOWLEDGE:
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, mode = 'oracle', walletContext, conversationHistory = [] } = await request.json();
+    const { message, mode = 'oracle', promptId, walletContext, conversationHistory = [] } = await request.json();
 
-    const systemPrompt = `${BASE_PROMPT}\n\n${MODE_PROMPTS[mode as keyof typeof MODE_PROMPTS] || MODE_PROMPTS.oracle}`;
+    let systemPrompt = `${BASE_PROMPT}`;
+    if (promptId) {
+      const promptRes = await fetch(
+        `${request.nextUrl.origin}/api/ai/web3-chat?action=get&id=${promptId}`
+      );
+      
+      if (promptRes.ok) {
+        const { prompt } = await promptRes.json();
+        console.log(prompt)
+        systemPrompt = prompt.content;
+      }
+    }
+    console.log(systemPrompt)
+
+    const modePrompt = MODE_PROMPTS[mode as keyof typeof MODE_PROMPTS] || MODE_PROMPTS.oracle;
 
     const contextString = walletContext?.connected 
       ? `User's wallet: ${walletContext.address} (${walletContext.balance} ETH on chain ${walletContext.chainId})`
       : `User has not connected a wallet`;
 
-    const fullPrompt = `${systemPrompt}\n\nCONTEXT: ${contextString}\n\nCONVERSATION:\n${conversationHistory.map((m: any) => `${m.role}: ${m.content}`).join('\n')}\n\nUser: ${message}`;
+    const fullPrompt = `${systemPrompt}\n\n${modePrompt}\n\nCONTEXT: ${contextString}\n\nCONVERSATION:\n${conversationHistory.map((m: any) => `${m.role}: ${m.content}`).join('\n')}\n\nUser: ${message}`;
 
     const apiKey = process.env.CLAUDE_API_KEY;
     if (!apiKey) throw new Error('API key not configured');
+
+    let selectedModel = 'claude-sonnet-4-20250514';
+    let selectedMaxTokens = 2000;
+
+    if (promptId) {
+      const promptRes = await fetch(
+        `${request.nextUrl.origin}/api/ai/web3-chat?action=get&id=${promptId}`
+      );
+      
+      if (promptRes.ok) {
+        const { prompt } = await promptRes.json();
+        systemPrompt = prompt.content;
+        selectedModel = prompt.model || selectedModel;
+        selectedMaxTokens = prompt.maxTokens || selectedMaxTokens;
+      }
+    }
 
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -76,8 +106,8 @@ export async function POST(request: NextRequest) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
+        model: selectedModel,
+        max_tokens: selectedMaxTokens,
         messages: [{ role: 'user', content: fullPrompt }]
       })
     });

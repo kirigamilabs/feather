@@ -69,12 +69,14 @@ When user asks about transactions:
 IMPORTANT: Adapt response style based on user sophistication. Explain concepts for new users, dive deeper for experienced users.`;
 
 // In-memory storage for prompts (replace with database in production)
-const promptStore = new Map<string, { id: string; name: string; content: string; createdAt: number }>();
+const promptStore = new Map<string, { id: string; name: string; content: string; model: string; maxTokens: number; createdAt: number }>();
 
 // Initialize with default
 promptStore.set('default', {
   id: 'default',
   name: 'Suguru AI',
+  model: 'claude-sonnet-4-20250514',
+  maxTokens: 2000,
   content: DEFAULT_SYSTEM_PROMPT,
   createdAt: Date.now()
 });
@@ -207,6 +209,9 @@ export async function GET(request: NextRequest) {
     const prompts = Array.from(promptStore.values()).map(p => ({
       id: p.id,
       name: p.name,
+      content: p.content,
+      model: p.model || 'claude-sonnet-4-20250514',
+      maxTokens: p.maxTokens || 2000,
       createdAt: p.createdAt
     }));
     return NextResponse.json({ prompts });
@@ -226,7 +231,7 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const { id, name, content } = await request.json();
+    const { id, name, content, model, maxTokens } = await request.json();
 
     if (!id || !name || !content) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -237,6 +242,8 @@ export async function PUT(request: NextRequest) {
       id,
       name,
       content,
+      model: model || 'claude-sonnet-4-20250514',
+      maxTokens: maxTokens || 2000,
       createdAt: existing?.createdAt || Date.now()
     });
 

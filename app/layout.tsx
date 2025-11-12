@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Serif} from "next/font/google";
 import { AIProvider } from "@/components/AIProvider";
+import { PromptProvider } from '@/components/PromptProvider';
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Web3Provider } from '@/components/Web3Provider';
 import "./globals.css";
@@ -38,9 +39,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <AIProvider>
-              {children}
-            </AIProvider>
+            <PromptProvider>
+              <AIProvider>
+                {children}
+              </AIProvider>
+            </PromptProvider>
           </ThemeProvider>
         </Web3Provider>
       </body>

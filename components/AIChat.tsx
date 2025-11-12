@@ -4,6 +4,7 @@ import {
   Sparkles, ArrowRight, Zap, Brain, TrendingUp, Send, Loader2
 } from 'lucide-react';
 import { DisclaimerBanner } from '@/components/Disclaimer';
+import { PromptSelector, usePrompts } from '@/components/PromptProvider';
 
 interface Message {
   id: string;
@@ -164,6 +165,7 @@ const ModeSelection = ({ onModeSelect }: { onModeSelect: (mode: ModeOption) => v
 };
 
 const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
+  const { selectedPrompt } = usePrompts();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -221,6 +223,7 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
         body: JSON.stringify({
           message: currentInput,
           mode: selectedMode || 'oracle',
+          promptId: selectedPrompt?.id, 
           conversationHistory: messages.map(m => ({ role: m.role, content: m.content })),
           walletContext: {
             connected: false, // Replace with actual wallet state
@@ -299,25 +302,30 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
     >
       {/* Header */}
       <div className="border-b border-white/10 bg-black/50 backdrop-blur-xl p-6">
-        <div className="flex items-center gap-3">
-          <motion.div
-            animate={{
-              boxShadow: [
-                '0 0 20px rgba(59, 130, 246, 0.3)',
-                '0 0 40px rgba(59, 130, 246, 0.5)',
-                '0 0 20px rgba(59, 130, 246, 0.3)',
-              ]
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center"
-          >
-            <Sparkles className="w-5 h-5 text-white" />
-          </motion.div>
-          <div>
-            <h1 className="text-xl font-light text-white">Suguru</h1>
-            <p className="text-sm text-gray-500">
-              {selectedMode && selectedMode !== 'skip' ? `${selectedMode} Mode` : 'Ready'}
-            </p>
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            <motion.div
+              animate={{
+                boxShadow: [
+                  '0 0 20px rgba(59, 130, 246, 0.3)',
+                  '0 0 40px rgba(59, 130, 246, 0.5)',
+                  '0 0 20px rgba(59, 130, 246, 0.3)',
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center"
+            >
+              <Sparkles className="w-5 h-5 text-white" />
+            </motion.div>
+            <div>
+              <h1 className="text-xl font-light text-white">Suguru</h1>
+              <p className="text-sm text-gray-500">
+                {selectedMode && selectedMode !== 'skip' ? `${selectedMode} Mode` : 'Ready'}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <PromptSelector />
           </div>
         </div>
       </div>

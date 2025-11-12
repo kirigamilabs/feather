@@ -1,48 +1,335 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 :root {
-  --background: hsl(0 0% 98%);
-  --foreground: hsl(0 0% 9%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(0 0% 9%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(0 0% 9%);
-  --primary: hsl(221.2 83.2% 53.3%);
-  --primary-foreground: hsl(210 40% 98%);
-  --secondary: hsl(280 100% 68%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(210 40% 96.1%);
-  --muted-foreground: hsl(215.4 16.3% 46.9%);
-  --accent: hsl(210 40% 96.1%);
-  --accent-foreground: hsl(222.2 47.4% 11.2%);
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(214.3 31.8% 91.4%);
-  --input: hsl(214.3 31.8% 91.4%);
-  --ring: hsl(221.2 83.2% 53.3%);
+  /* Light Theme - Paper & Ink with Glacier Accent */
+  --background: 42 25% 92%;           /* Warm paper cream */
+  --foreground: 220 20% 15%;          /* Deep ink blue-black */
+  
+  --card: 40 30% 97%;                 /* Pristine paper white */
+  --card-foreground: 220 20% 15%;     /* Deep ink */
+  
+  --popover: 40 30% 97%;
+  --popover-foreground: 220 20% 15%;
+  
+  --primary: 210 85% 42%;             /* Deep glacier blue */
+  --primary-foreground: 40 30% 97%;   /* Paper white */
+  
+  --secondary: 195 75% 35%;           /* Ice shadow blue */
+  --secondary-foreground: 40 30% 97%;
+  
+  --muted: 38 20% 88%;                /* Aged paper */
+  --muted-foreground: 220 15% 45%;    /* Faded ink */
+  
+  --accent: 200 90% 48%;              /* Bright glacier */
+  --accent-foreground: 40 30% 97%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 40 30% 97%;
+  
+  --border: 38 18% 82%;               /* Subtle paper edge */
+  --input: 38 18% 82%;
+  --ring: 210 85% 42%;
+  
   --radius: 0.75rem;
 }
 
 .dark {
-  --background: hsl(240 10% 4%);
-  --foreground: hsl(0 0% 98%);
-  --card: hsl(240 10% 4%);
-  --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(240 10% 4%);
-  --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(217.2 91.2% 59.8%);
-  --primary-foreground: hsl(210 40% 98%);
-  --secondary: hsl(280 100% 68%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(217.2 32.6% 17.5%);
-  --muted-foreground: hsl(215 20.2% 65.1%);
-  --accent: hsl(217.2 32.6% 17.5%);
-  --accent-foreground: hsl(210 40% 98%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(217.2 32.6% 17.5%);
-  --input: hsl(217.2 32.6% 17.5%);
-  --ring: hsl(224.3 76.3% 48%);
+  /* Dark Theme - Deep Space with Glacier Ice Accent */
+  --background: 222 47% 8%;           /* Deep cosmic blue-black */
+  --foreground: 195 60% 92%;          /* Ice crystal white */
+  
+  --card: 220 45% 12%;                /* Midnight blue card */
+  --card-foreground: 195 60% 92%;     /* Ice white */
+  
+  --popover: 220 45% 12%;
+  --popover-foreground: 195 60% 92%;
+  
+  --primary: 195 100% 55%;            /* Luminous glacier blue */
+  --primary-foreground: 222 47% 8%;   /* Deep space */
+  
+  --secondary: 210 85% 48%;           /* Electric ice */
+  --secondary-foreground: 222 47% 8%;
+  
+  --muted: 220 40% 18%;               /* Deep shadow */
+  --muted-foreground: 195 50% 65%;    /* Frosted glass */
+  
+  --accent: 185 85% 52%;              /* Cyan ice glow */
+  --accent-foreground: 222 47% 8%;
+  
+  --destructive: 0 85% 60%;
+  --destructive-foreground: 222 47% 8%;
+  
+  --border: 220 42% 22%;              /* Subtle ice edge */
+  --input: 220 42% 22%;
+  --ring: 195 100% 55%;
+}
+
+/* Base Styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overscroll-behavior-y: none;
+    touch-action: pan-x pan-y;
+  }
+}
+
+/* Custom Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
+
+/* Light Theme Specific Enhancements */
+:root {
+  /* Subtle paper texture effect */
+  --paper-texture: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03' /%3E%3C/svg%3E");
+}
+
+:root body {
+  background-image: var(--paper-texture);
+  background-attachment: fixed;
+}
+
+/* Dark Theme Specific Enhancements */
+.dark {
+  /* Cosmic depth effect */
+  --cosmic-glow: radial-gradient(
+    circle at 50% 50%, 
+    hsl(var(--primary) / 0.05) 0%, 
+    transparent 50%
+  );
+}
+
+.dark body {
+  background-image: var(--cosmic-glow);
+  background-attachment: fixed;
+}
+
+/* Smooth Transitions */
+@layer utilities {
+  .transition-theme {
+    transition: 
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+}
+
+/* Custom Animations */
+@keyframes grid-flow {
+  0% { 
+    transform: translateY(0); 
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% { 
+    transform: translateY(100px); 
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.5);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Utility Classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+.glass-effect {
+  background: hsl(var(--card) / 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-effect-strong {
+  background: hsl(var(--card) / 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Selection Colors */
+::selection {
+  background-color: hsl(var(--primary) / 0.3);
+  color: hsl(var(--foreground));
+}
+
+::-moz-selection {
+  background-color: hsl(var(--primary) / 0.3);
+  color: hsl(var(--foreground));
+}
+
+/* Smooth Font Rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Input Autofill Styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: hsl(var(--foreground));
+  -webkit-box-shadow: 0 0 0px 1000px hsl(var(--background)) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Light Theme Input Focus Glow */
+:root input:focus,
+:root textarea:focus {
+  box-shadow: 
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--primary) / 0.2),
+    0 4px 6px -1px hsl(var(--primary) / 0.1);
+}
+
+/* Dark Theme Input Focus Glow */
+.dark input:focus,
+.dark textarea:focus {
+  box-shadow: 
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--primary) / 0.3),
+    0 8px 16px -4px hsl(var(--primary) / 0.2);
+}
+
+/* Card Hover Effects - Light Theme */
+:root .card-hover {
+  transition: all 0.3s ease;
+}
+
+:root .card-hover:hover {
+  box-shadow: 
+    0 4px 6px -1px hsl(var(--primary) / 0.1),
+    0 2px 4px -1px hsl(var(--primary) / 0.06);
+  transform: translateY(-2px);
+}
+
+/* Card Hover Effects - Dark Theme */
+.dark .card-hover {
+  transition: all 0.3s ease;
+}
+
+.dark .card-hover:hover {
+  box-shadow: 
+    0 10px 25px -5px hsl(var(--primary) / 0.2),
+    0 8px 10px -6px hsl(var(--primary) / 0.1);
+  transform: translateY(-2px);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)),
+    hsl(var(--accent))
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Button Glow - Light Theme */
+:root .btn-glow {
+  box-shadow: 0 4px 14px 0 hsl(var(--primary) / 0.2);
+}
+
+:root .btn-glow:hover {
+  box-shadow: 0 6px 20px hsl(var(--primary) / 0.3);
+}
+
+/* Button Glow - Dark Theme */
+.dark .btn-glow {
+  box-shadow: 
+    0 0 20px hsl(var(--primary) / 0.3),
+    0 4px 14px 0 hsl(var(--primary) / 0.2);
+}
+
+.dark .btn-glow:hover {
+  box-shadow: 
+    0 0 30px hsl(var(--primary) / 0.4),
+    0 6px 20px hsl(var(--primary) / 0.3);
+}
+
+/* Prevent flash of unstyled content */
+html {
+  color-scheme: light dark;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

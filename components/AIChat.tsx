@@ -70,7 +70,7 @@ const ModeSelection = ({ onModeSelect }: { onModeSelect: (mode: ModeOption) => v
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black"
+      className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl overflow-y-auto"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-blue-950/20 via-black to-black" />
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-12">
@@ -99,7 +99,7 @@ const ModeSelection = ({ onModeSelect }: { onModeSelect: (mode: ModeOption) => v
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {modes.map((mode, idx) => (
             <motion.button
               key={mode.id}

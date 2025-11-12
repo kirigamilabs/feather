@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, ArrowRight, Zap, Brain, TrendingUp, Send, Loader2
 } from 'lucide-react';
+import { DisclaimerBanner } from '@/components/Disclaimer';
 
 interface Message {
   id: string;
@@ -72,7 +73,6 @@ const ModeSelection = ({ onModeSelect }: { onModeSelect: (mode: ModeOption) => v
       className="fixed inset-0 z-50 flex items-center justify-center bg-black"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-blue-950/20 via-black to-black" />
-      
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -404,6 +404,8 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
           </button>
         </div>
       </form>
+
+      <DisclaimerBanner/>
     </motion.div>
   );
 };

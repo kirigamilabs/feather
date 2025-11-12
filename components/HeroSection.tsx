@@ -197,7 +197,7 @@ const Hero = ({ onWelcome }: { onWelcome: () => void }) => {
           transition={{ duration: 1, delay: 0.4 }}
           className="text-sm md:text-xl text-gray-400 font-light mb-12 max-w-2xl mx-auto"
         >
-          The first AI that doesn't just advise—it executes.
+          The first AI that doesn&apos;t just advise—it executes.
           <br />
           <span className="text-gray-500">Speak your strategy. Watch it happen.</span>
         </motion.p>

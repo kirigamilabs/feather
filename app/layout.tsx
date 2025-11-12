@@ -19,7 +19,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Kirigami",
+  title: "KIRI/GAMI",
   description: "AI x Crypto.",
 };
 
@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistMono.className} min-h-screen bg-background text-foreground antialiased`}>
+      <body className={`${geistSans.className} min-h-screen bg-background text-foreground antialiased`}>
         <Web3Provider>
           <ThemeProvider
             attribute="class"

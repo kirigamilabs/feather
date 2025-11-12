@@ -3,13 +3,13 @@ import React from 'react';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { mainnet, base, sepolia } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { metaMask, injected } from 'wagmi/connectors';
+import { metaMask
+ } from 'wagmi/connectors';
 
 const config = createConfig({
   chains: [mainnet, base, sepolia],
   connectors: [
-    metaMask(),
-    injected()
+    metaMask()
   ],
   transports: {
     [mainnet.id]: http(),

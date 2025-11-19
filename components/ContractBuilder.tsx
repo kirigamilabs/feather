@@ -134,7 +134,7 @@ export default function ContractBuilder({ isOpen, onClose }: { isOpen: boolean; 
 
           {/* Example Use Cases */}
           <div className="mb-8 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl border border-purple-500/20">
-            <h3 className="text-white font-semibold mb-3 text-center">What You'll Be Able To Build:</h3>
+            <h3 className="text-white font-semibold mb-3 text-center">What You&apos;ll Be Able To Build:</h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div className="flex items-center gap-2 text-gray-300">
                 <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
@@ -196,8 +196,8 @@ export default function ContractBuilder({ isOpen, onClose }: { isOpen: boolean; 
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
                 <Sparkles className="w-8 h-8 text-green-400" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">You're on the list!</h3>
-              <p className="text-gray-400">We'll notify you when the Contract Builder launches.</p>
+              <h3 className="text-xl font-semibold text-white mb-2">You&apos;re on the list!</h3>
+              <p className="text-gray-400">We&apos;ll notify you when the Contract Builder launches.</p>
             </motion.div>
           )}
 

@@ -20,6 +20,7 @@ export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClo
     baseFee: 15,
     trend: 'stable'
   });
+  
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [history, setHistory] = useState<number[]>([15, 18, 20, 17, 16, 15, 18, 22, 19, 18]);
   const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'standard' | 'fast' | 'instant'>('standard');
@@ -143,7 +144,8 @@ export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClo
             { key: 'fast', label: 'Fast', icon: '🚀', color: 'orange' },
             { key: 'instant', label: 'Instant', icon: '⚡️', color: 'red' }
           ].map(({ key, label, icon, color }) => {
-            const speed = key as keyof typeof gasData;
+            type NumericKeys = Exclude<keyof GasData, 'trend'>;
+            const speed = key as 'slow' | 'standard' | 'fast' | 'instant';
             const cost = calculateCost(gasData[speed]);
             const isSelected = selectedSpeed === speed;
             

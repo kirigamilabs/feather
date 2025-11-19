@@ -148,7 +148,7 @@ export default function DisclaimerBanner() {
           {/* Additional Warning */}
           <div className="mt-6 p-3 bg-red-500/5 border border-red-500/20 rounded-lg">
             <p className="text-xs text-red-400 text-center">
-              ⚠️ By clicking "I Accept", you confirm that you are 18+ years old and legally permitted to use cryptocurrency services in your jurisdiction.
+              ⚠️ By clicking &quot;I Accept&quot;, you confirm that you are 18+ years old and legally permitted to use cryptocurrency services in your jurisdiction.
             </p>
           </div>
         </motion.div>

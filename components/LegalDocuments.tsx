@@ -39,7 +39,7 @@ export function TermsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             <div>
               <p className="text-sm text-gray-400 mb-4">Last Updated: November 19, 2025</p>
               <p className="mb-4">
-                Welcome to KIRIGAMI AI Platform ("we," "our," or "the Platform"). By accessing or using our services, you agree to be bound by these Terms of Service.
+                Welcome to KIRIGAMI AI Platform (&quot;we,&quot; &quot;our,&quot; or &quot;the Platform&quot;). By accessing or using our services, you agree to be bound by these Terms of Service.
               </p>
             </div>
 
@@ -191,7 +191,7 @@ export function PrivacyModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
             <div>
               <p className="text-sm text-gray-400 mb-4">Last Updated: November 19, 2025</p>
               <p className="mb-4">
-                KIRIGAMI Labs ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.
+                KIRIGAMI Labs (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information.
               </p>
             </div>
 
@@ -214,7 +214,7 @@ export function PrivacyModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               </ul>
 
               <div className="mt-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                <p className="font-semibold text-green-400 mb-2">🔒 What We DON'T Collect:</p>
+                <p className="font-semibold text-green-400 mb-2">🔒 What We DON&apos;T Collect:</p>
                 <ul className="space-y-1 text-sm">
                   <li>• Private keys or seed phrases</li>
                   <li>• Password information</li>
@@ -287,7 +287,7 @@ export function PrivacyModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold text-white mb-3">8. Children's Privacy</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">8. Children&apos;s Privacy</h3>
               <p>
                 Our services are not intended for users under 18 years of age. We do not knowingly collect information from children.
               </p>

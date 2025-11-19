@@ -311,9 +311,6 @@ const Features = () => {
           <p className="text-xl text-gray-400 font-light">
             Not just another interface. A paradigm shift.
           </p>
-          <p className="text-xl text-gray-400 font-light">
-            insert demo video here
-          </p>
         </motion.div>
 
         {/* Feature Grid */}
@@ -413,7 +410,7 @@ const Solutions = () => {
             Built for Everyone
           </h2>
           <p className="text-xl text-gray-400 font-light max-w-2xl mx-auto">
-            Whether you're just starting or scaling operations, we have a solution for you.
+            Whether you&apos;re just starting or scaling operations, we have a solution for you.
           </p>
         </motion.div>
 

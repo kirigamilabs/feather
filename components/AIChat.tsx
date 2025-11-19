@@ -3,8 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, ArrowRight, Zap, Brain, TrendingUp, Send, Loader2
 } from 'lucide-react';
-import { DisclaimerBanner } from '@/components/Disclaimer';
+import DisclaimerBanner from '@/components/Disclaimer';
 import { PromptSelector, usePrompts } from '@/components/PromptProvider';
+import { WalletConnect } from '@/components/WalletConnect';
+import MasterToolbar from '@/components/MasterToolbar';
+import SwapInterface from '@/components/SwapInterface';
+import ContractInteraction from '@/components/ContractInteraction';
+import ContractBuilder from '@/components/ContractBuilder';
+import GasTracker from '@/components/GasTracker';
+import { LegalFooter } from '@/components/LegalDocuments';
+import { AISettings } from '@/components/AISettings';
+import { useWallet } from '@/hooks/useWallet';
 
 interface Message {
   id: string;
@@ -171,6 +180,15 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [showWallet, setShowWallet] = useState(false);
+  const [showSwap, setShowSwap] = useState(false);
+  const [showContract, setShowContract] = useState(false);
+  const [showBuilder, setShowBuilder] = useState(false);
+  const [showGas, setShowGas] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  
+  const { walletState } = useWallet();
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -300,8 +318,8 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
       transition={{ duration: 0.5 }}
       className="fixed inset-0 z-50 flex flex-col bg-black"
     >
-      {/* Header */}
-      <div className="border-b border-white/10 bg-black/50 backdrop-blur-xl p-6">
+      {/* Header with Master Toolbar */}
+      <div className="border-b border-white/10 bg-black/50 backdrop-blur-xl p-4 sm:p-6">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
             <motion.div
@@ -324,9 +342,17 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <PromptSelector />
-          </div>
+
+          {/* Master Toolbar */}
+          <MasterToolbar
+            onSwapClick={() => setShowSwap(true)}
+            onContractClick={() => setShowContract(true)}
+            onBuilderClick={() => setShowBuilder(true)}
+            onGasClick={() => setShowGas(true)}
+            onWalletClick={() => setShowWallet(true)}
+            onSettingsClick={() => setShowSettings(true)}
+            isWalletConnected={walletState.isConnected}
+          />
         </div>
       </div>
 
@@ -412,6 +438,43 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
           </button>
         </div>
       </form>
+      
+      <LegalFooter />
+      
+      <WalletConnect 
+        isOpen={showWallet} 
+        onClose={() => setShowWallet(false)}
+        onConnected={() => console.log('Wallet connected')}
+      />
+      <SwapInterface 
+        isOpen={showSwap} 
+        onClose={() => setShowSwap(false)} 
+      />
+      <ContractInteraction 
+        isOpen={showContract} 
+        onClose={() => setShowContract(false)} 
+      />
+      <ContractBuilder 
+        isOpen={showBuilder} 
+        onClose={() => setShowBuilder(false)} 
+      />
+      <GasTracker 
+        isOpen={showGas} 
+        onClose={() => setShowGas(false)} 
+      />
+      {showSettings && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <AISettings />
+            <button
+              onClick={() => setShowSettings(false)}
+              className="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg text-white transition-colors"
+            >
+              Close Settings
+            </button>
+          </div>
+        </div>
+      )}
 
       <DisclaimerBanner/>
     </motion.div>

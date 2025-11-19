@@ -95,11 +95,19 @@ const Navigation = ({ onEnter }: { onEnter: () => void }) => {
               <a href="#features" className="block text-gray-400 hover:text-white transition-colors">
                 Features
               </a>
-              <a href="#security" className="block text-gray-400 hover:text-white transition-colors">
-                Security
+              <a href="#solutions" className="block text-gray-400 hover:text-white transition-colors">
+                Solutions
               </a>
-              <a href="#about" className="block text-gray-400 hover:text-white transition-colors">
-                About
+              <a href="#pricing" className="block text-gray-400 hover:text-white transition-colors">
+                Pricing
+              </a>
+              <a 
+                href="https://github.com/kirigamilabs/feather" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-gray-400 hover:text-white transition-colors"
+              >
+                Docs
               </a>
               <button
                 onClick={onEnter}

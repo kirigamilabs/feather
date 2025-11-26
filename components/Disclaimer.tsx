@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Shield, FileText, ExternalLink } from 'lucide-react';
+import { TERMS_OF_SERVICE, PRIVACY_POLICY } from '@/components//LegalContent';
 
 export default function DisclaimerBanner() {
   const [accepted, setAccepted] = useState(false);
@@ -167,10 +168,7 @@ export default function DisclaimerBanner() {
                 </button>
               </div>
               <div className="text-gray-300 space-y-4 text-sm">
-                <p>Full terms of service content would go here...</p>
-                <p className="text-red-400 font-semibold">
-                  This is a placeholder. Actual terms would be comprehensive legal documentation.
-                </p>
+                {TERMS_OF_SERVICE}
               </div>
               <button
                 onClick={() => setShowTerms(false)}
@@ -196,10 +194,7 @@ export default function DisclaimerBanner() {
                 </button>
               </div>
               <div className="text-gray-300 space-y-4 text-sm">
-                <p>Full privacy policy content would go here...</p>
-                <p className="text-green-400 font-semibold">
-                  This is a placeholder. Actual policy would detail data collection and usage.
-                </p>
+                {PRIVACY_POLICY}
               </div>
               <button
                 onClick={() => setShowPrivacy(false)}

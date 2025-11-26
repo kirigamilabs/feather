@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Shield, X, ExternalLink } from 'lucide-react';
+import { TERMS_OF_SERVICE, PRIVACY_POLICY } from '@/components//LegalContent';
 
 export function TermsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   if (!isOpen) return null;

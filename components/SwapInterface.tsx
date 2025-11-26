@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDownUp, Settings, Info, AlertTriangle, CheckCircle, Loader2, X } from 'lucide-react';
 
-// Token list - expandable
+//TODO: PLUG IN FULL SWAP
 const TOKENS = [
   { symbol: 'ETH', name: 'Ethereum', address: '0x0000000000000000000000000000000000000000', decimals: 18, logo: '⟠' },
   { symbol: 'USDC', name: 'USD Coin', address: '0xA0b73E1Ff0B80914AB6fe0444E65848C4C34450b', decimals: 6, logo: '💵' },

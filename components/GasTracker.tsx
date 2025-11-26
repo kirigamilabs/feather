@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Fuel, TrendingUp, TrendingDown, Activity, RefreshCw, X, Clock } from 'lucide-react';
 
+//TODO: PLUG IN GAS TRACKER
 interface GasData {
   slow: number;
   standard: number;

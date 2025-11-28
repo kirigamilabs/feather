@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Sparkles, ArrowRight, ChevronDown, Zap, Shield, Brain, Menu, X, Check, Users, TrendingUp, Code } from 'lucide-react';
+import { LegalFooter } from '@/components/LegalDocuments';
 
 const Navigation = ({ onEnter }: { onEnter: () => void }) => {
   const [scrolled, setScrolled] = useState(false);
@@ -681,6 +682,7 @@ export default function HeroSection({ onComplete }: { onComplete: () => void }) 
             <Features />
             <Solutions />
             <Pricing />
+            <LegalFooter />
 
           </motion.div>
         )}
@@ -716,7 +718,7 @@ export default function HeroSection({ onComplete }: { onComplete: () => void }) 
                 transition={{ delay: 0.3 }}
                 className="text-2xl font-light text-white"
               >
-                Welcome home
+                Welcome home.
               </motion.p>
             </motion.div>
           </motion.div>

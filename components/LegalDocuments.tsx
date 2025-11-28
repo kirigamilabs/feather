@@ -361,7 +361,7 @@ export function LegalFooter() {
           rel="noopener noreferrer"
           className="hover:text-gray-300 transition-colors flex items-center gap-1"
         >
-          Docs
+          Github
           <ExternalLink className="w-3 h-3" />
         </a>
       </div>

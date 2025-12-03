@@ -2,11 +2,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Sparkles, ArrowRight, Send, Loader2, AlertCircle
+  Sparkles, HelpCircle, Send, Loader2, AlertCircle
 } from 'lucide-react';
 import DisclaimerBanner from '@/components/Disclaimer';
+import { FAQ } from '@/components/FAQ';
 import { usePrompts } from '@/components/PromptProvider';
-import { WalletConnect } from '@/components/WalletConnect';
 import MasterToolbar from '@/components/MasterToolbar';
 import SwapInterface from '@/components/SwapInterface';
 import ContractInteraction from '@/components/ContractInteraction';
@@ -16,6 +16,7 @@ import { LegalFooter } from '@/components/LegalDocuments';
 import { AISettings } from '@/components/AISettings';
 import { useWallet } from '@/hooks/useWallet';
 import { useTransactionManager } from '@/hooks/useTransactionManager';
+import { WalletConnect } from '@/components/WalletConnect';
 
 interface Message {
   id: string;
@@ -49,6 +50,7 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
   const [showBuilder, setShowBuilder] = useState(false);
   const [showGas, setShowGas] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showFAQ, setShowFAQ] = useState(false);
   
   // Wallet & Transaction Management
   const { walletState, isCorrectNetwork, ensureCorrectNetwork } = useWallet();
@@ -68,14 +70,16 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
       ? `\n\n**${selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1)} Mode** activated.`
       : '';
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setMessages([{
         id: '1',
         role: 'assistant',
         content: `${greeting}. I'm Suguru.${modeContext}\n\nI can help you:\n- Execute token swaps\n- Monitor gas prices\n- Interact with smart contracts\n- Analyze market conditions\n\nWhat would you like to do?`,
       }]);
     }, 500);
-  }, [selectedMode]);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Handle action execution from AI
   const handleAction = async (action: Action) => {
@@ -94,6 +98,11 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
           
           // Then show swap interface with pre-filled data
           setShowSwap(true);
+          //setSwapPrefillData({
+          //fromToken: action.params?.fromToken,
+          //toToken: action.params?.toToken,
+          //amount: action.params?.amount
+          //});
           break;
           
         case 'check_gas':
@@ -293,23 +302,33 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
               <Sparkles className="w-5 h-5 text-white" />
             </motion.div>
             <div>
-              <h1 className="text-xl font-light text-white">Suguru</h1>
+              <h1 className="text-xl font-light text-white">KIRI-GAMI</h1>
               <p className="text-sm text-gray-500">
-                {selectedMode && selectedMode !== 'skip' ? `${selectedMode} Mode` : 'AI Assistant'}
+                {selectedMode && selectedMode !== 'skip' ? `${selectedMode} Mode` : 'AI Assistance'}
               </p>
             </div>
           </div>
 
           {/* Master Toolbar */}
-          <MasterToolbar
-            onSwapClick={() => setShowSwap(true)}
-            onContractClick={() => setShowContract(true)}
-            onBuilderClick={() => setShowBuilder(true)}
-            onGasClick={() => setShowGas(true)}
-            onWalletClick={() => setShowWallet(true)}
-            onSettingsClick={() => setShowSettings(true)}
-            isWalletConnected={walletState.isConnected}
-          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowFAQ(true)}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              title="Help & FAQ"
+            >
+              <HelpCircle className="w-5 h-5 text-gray-400" />
+            </button>
+            
+            <MasterToolbar
+              onSwapClick={() => setShowSwap(true)}
+              onContractClick={() => setShowContract(true)}
+              onBuilderClick={() => setShowBuilder(true)}
+              onGasClick={() => setShowGas(true)}
+              onWalletClick={() => setShowWallet(true)}
+              onSettingsClick={() => setShowSettings(true)}
+              isWalletConnected={walletState.isConnected}
+            />
+          </div>
         </div>
       </div>
 
@@ -457,12 +476,16 @@ const ChatInterface = ({ selectedMode }: { selectedMode: string | null }) => {
         onConnected={() => {
           setShowWallet(false);
           // Add success message to chat
-          setMessages(prev => [...prev, {
-            id: Date.now().toString(),
-            role: 'assistant',
-            content: '✅ Wallet connected successfully! You can now execute swaps and interact with smart contracts.'
-          }]);
+          //setMessages(prev => [...prev, {
+          //  id: Date.now().toString(),
+          //  role: 'assistant',
+          //  content: '✅ Wallet connected successfully! You can now execute swaps and interact with smart contracts.'
+          //}]);
         }}
+      />
+      <FAQ 
+        isOpen={showFAQ}
+        onClose={() => setShowFAQ(false)}
       />
       <SwapInterface 
         isOpen={showSwap} 

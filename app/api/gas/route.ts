@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
 
     // Fetch from Etherscan
     const response = await fetch(
-      `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${apiKey}`
+      `https://api.etherscan.io/v2/api?chainid=1&module=gastracker&action=gasoracle&apikey=${apiKey}`
     );
 
     if (!response.ok) {

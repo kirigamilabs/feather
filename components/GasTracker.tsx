@@ -12,6 +12,11 @@ interface GasData {
   trend: 'up' | 'down' | 'stable';
 }
 
+export const getCurrentGasPrice = async () => {
+  const res = await fetch('/api/gas');
+  return res.json();
+};
+
 export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [gasData, setGasData] = useState<GasData>({
     slow: 12,
@@ -72,6 +77,22 @@ export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClo
       default: return 'Unknown';
     }
   };
+
+  useEffect(() => {
+    const fetchGas = async () => {
+      try {
+        const res = await fetch('/api/gas');
+        const data = await res.json();
+        setGasData(data);
+      } catch (error) {
+        console.error('Gas fetch error:', error);
+      }
+    };
+
+    fetchGas();
+    const interval = setInterval(fetchGas, 120000); // 120 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   if (!isOpen) return null;
 

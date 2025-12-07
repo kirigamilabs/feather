@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-//TODO: REPLACE ETHERSCAN WITH PROP GAS
+
 interface GasData {
   slow: number;
   standard: number;
@@ -56,30 +56,36 @@ export async function GET(req: NextRequest) {
     }
 
     const result = data.result;
+    
+    // IMPORTANT: Etherscan returns gas prices as decimal strings (e.g., "0.255570098")
     const baseFee = parseFloat(result.suggestBaseFee);
+    const safeGas = parseFloat(result.SafeGasPrice);
+    const proposeGas = parseFloat(result.ProposeGasPrice);
+    const fastGas = parseFloat(result.FastGasPrice);
 
     // Calculate trending
     const trend = calculateTrend(baseFee);
 
     const gasData: GasData = {
-      slow: parseInt(result.SafeGasPrice),
-      standard: parseInt(result.ProposeGasPrice),
-      fast: parseInt(result.FastGasPrice),
-      instant: Math.round(parseInt(result.FastGasPrice) * 1.2),
-      baseFee: Math.round(baseFee),
+      // Round to reasonable precision but keep the decimal values
+      slow: Math.round(safeGas * 1000) / 1000,
+      standard: Math.round(proposeGas * 1000) / 1000,
+      fast: Math.round(fastGas * 1000) / 1000,
+      instant: Math.round(fastGas * 1.2 * 1000) / 1000,
+      baseFee: Math.round(baseFee * 1000) / 1000,
       trend,
       lastUpdate: Date.now(),
       suggestedMaxFee: {
-        slow: Math.round(baseFee * 1.1),
-        standard: Math.round(baseFee * 1.2),
-        fast: Math.round(baseFee * 1.4),
-        instant: Math.round(baseFee * 1.6)
+        slow: Math.round(baseFee * 1.1 * 1000) / 1000,
+        standard: Math.round(baseFee * 1.2 * 1000) / 1000,
+        fast: Math.round(baseFee * 1.4 * 1000) / 1000,
+        instant: Math.round(baseFee * 1.6 * 1000) / 1000
       },
       suggestedPriorityFee: {
-        slow: 1,
-        standard: 2,
-        fast: 3,
-        instant: 5
+        slow: 0.5,
+        standard: 1,
+        fast: 2,
+        instant: 3
       }
     };
 
@@ -117,24 +123,24 @@ function calculateTrend(currentBaseFee: number): 'up' | 'down' | 'stable' {
 
 function getMockGasData(): NextResponse {
   const mockGasData: GasData = {
-    slow: 12,
-    standard: 18,
-    fast: 25,
-    instant: 35,
-    baseFee: 15,
+    slow: 12.5,
+    standard: 18.3,
+    fast: 25.7,
+    instant: 35.2,
+    baseFee: 15.8,
     trend: 'stable',
     lastUpdate: Date.now(),
     suggestedMaxFee: {
-      slow: 17,
-      standard: 18,
-      fast: 21,
-      instant: 24
+      slow: 17.4,
+      standard: 19.0,
+      fast: 22.1,
+      instant: 25.3
     },
     suggestedPriorityFee: {
-      slow: 1,
-      standard: 2,
-      fast: 3,
-      instant: 5
+      slow: 0.5,
+      standard: 1,
+      fast: 2,
+      instant: 3
     }
   };
 
@@ -153,8 +159,8 @@ export async function POST(req: NextRequest) {
     // For now, return mock historical data
     const historicalData = Array.from({ length: hours }, (_, i) => ({
       timestamp: Date.now() - (hours - i) * 3600000,
-      baseFee: Math.round(15 + Math.random() * 10 - 5),
-      fast: Math.round(25 + Math.random() * 15 - 7)
+      baseFee: Math.round((15 + Math.random() * 10 - 5) * 1000) / 1000,
+      fast: Math.round((25 + Math.random() * 15 - 7) * 1000) / 1000
     }));
 
     return NextResponse.json(historicalData);

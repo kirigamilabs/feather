@@ -65,11 +65,9 @@ export async function POST(request: NextRequest) {
       
       if (promptRes.ok) {
         const { prompt } = await promptRes.json();
-        console.log(prompt)
         systemPrompt = prompt.content;
       }
     }
-    console.log(systemPrompt)
 
     const modePrompt = MODE_PROMPTS[mode as keyof typeof MODE_PROMPTS] || MODE_PROMPTS.oracle;
 
@@ -82,8 +80,8 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.CLAUDE_API_KEY;
     if (!apiKey) throw new Error('API key not configured');
 
-    let selectedModel = 'claude-sonnet-4-20250514';
-    let selectedMaxTokens = 2000;
+    let selectedModel = 'claude-opus-4-5-20251101';
+    let selectedMaxTokens = 1000;
 
     if (promptId) {
       const promptRes = await fetch(

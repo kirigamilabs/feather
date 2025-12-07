@@ -57,7 +57,7 @@ export default function DisclaimerBanner() {
                 Critical Warnings
               </h3>
               <ul className="space-y-2 text-sm text-gray-300">
-                <li>• <strong>Experimental Software:</strong> This platform is in alpha. Use at your own risk.</li>
+                <li>• <strong>Experimental Software:</strong> This platform is in beta. Use at your own risk.</li>
                 <li>• <strong>AI Can Make Mistakes:</strong> Always verify AI suggestions before executing transactions.</li>
                 <li>• <strong>Irreversible Transactions:</strong> Blockchain transactions cannot be undone.</li>
                 <li>• <strong>Financial Risk:</strong> You may lose all funds. Never invest more than you can afford to lose.</li>

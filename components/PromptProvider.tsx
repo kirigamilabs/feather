@@ -185,8 +185,8 @@ const PromptCreatorModal = ({
   const { savePrompt } = usePrompts();
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
-  const [model, setModel] = useState('claude-sonnet-4-20250514');
-  const [maxTokens, setMaxTokens] = useState(2000);
+  const [model, setModel] = useState('claude-sonnet-4-5-20250929');
+  const [maxTokens, setMaxTokens] = useState(1000);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -247,8 +247,8 @@ const PromptCreatorModal = ({
       
       setName('');
       setContent('');
-      setModel('claude-sonnet-4-20250514');
-      setMaxTokens(2000);
+      setModel('claude-sonnet-4-5-20250929');
+      setMaxTokens(1000);
       setError(null);
       onClose();
     } catch (err) {
@@ -345,9 +345,8 @@ const PromptCreatorModal = ({
                 onChange={(e) => setModel(e.target.value)}
                 className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
               >
-                <option value="claude-sonnet-4-20250514">Sonnet 4</option>
                 <option value="claude-sonnet-4-5-20250929">Sonnet 4.5</option>
-                <option value="claude-opus-4-20250514">Opus 4</option>
+                <option value="claude-opus-4-5-20251101">Opus 4.5</option>
               </select>
             </div>
 
@@ -476,7 +475,7 @@ export const PromptSelector = () => {
                         <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
                           <span>{prompt.model?.includes('opus') ? 'Opus' : prompt.model?.includes('4-5') ? 'Sonnet 4.5' : 'Sonnet 4'}</span>
                           <span>•</span>
-                          <span>{prompt.maxTokens || 2000} tokens</span>
+                          <span>{prompt.maxTokens || 1000} tokens</span>
                         </div>
                       </div>
                     </button>

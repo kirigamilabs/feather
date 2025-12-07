@@ -75,7 +75,7 @@ const promptStore = new Map<string, { id: string; name: string; content: string;
 promptStore.set('default', {
   id: 'default',
   name: 'Suguru AI',
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-opus-4-5-20251101',
   maxTokens: 2000,
   content: DEFAULT_SYSTEM_PROMPT,
   createdAt: Date.now()
@@ -210,8 +210,8 @@ export async function GET(request: NextRequest) {
       id: p.id,
       name: p.name,
       content: p.content,
-      model: p.model || 'claude-sonnet-4-20250514',
-      maxTokens: p.maxTokens || 2000,
+      model: p.model || 'claude-sonnet-4-5-20250929',
+      maxTokens: p.maxTokens || 1000,
       createdAt: p.createdAt
     }));
     return NextResponse.json({ prompts });
@@ -242,8 +242,8 @@ export async function PUT(request: NextRequest) {
       id,
       name,
       content,
-      model: model || 'claude-sonnet-4-20250514',
-      maxTokens: maxTokens || 2000,
+      model: model || 'claude-sonnet-4-5-20250929',
+      maxTokens: maxTokens || 1000,
       createdAt: existing?.createdAt || Date.now()
     });
 

@@ -1,68 +1,80 @@
-import React, { FC } from 'react';
-import { LucideIcon, Bot, ChartLine, Brain, Wallet } from 'lucide-react';
-
-type FeatureCardProps = {
-  title: string;
-  description: string;
-  icon: LucideIcon;
-};
-
-const FeatureCard: FC<FeatureCardProps> = ({ title, description, icon: Icon }) => (
-  <div className="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-    <div className="absolute -top-6 left-6">
-      <div className="p-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg">
-        <Icon className="w-6 h-6 text-white" />
-      </div>
-    </div>
-    <div className="mt-8">
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-300">{description}</p>
-    </div>
-  </div>
-);
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Zap, Shield, Brain } from 'lucide-react';
 
 const FeaturesSection = () => {
   const features = [
     {
-      title: "Intelligent Portfolio Management",
-      description: "AI-driven portfolio optimization and rebalancing with personalized investment recommendations.",
       icon: Brain,
+      title: 'Conversational Execution',
+      description: 'Speak naturally. "Swap 0.1 ETH for USDC with low slippage." Done.',
+      demo: 'Real-time transaction building from natural language'
     },
     {
-      title: "Automated Trading Strategies",
-      description: "Deploy customizable AI trading bots for market-making, arbitrage, and alpha-seeking.",
-      icon: Bot,
+      icon: Zap,
+      title: 'One-Click Strategies',
+      description: 'Complex multi-step operations bundled into single transactions.',
+      demo: 'Batch swaps, LP positions, yield optimization—one signature'
     },
     {
-      title: "Market Insights",
-      description: "AI-generated analysis, alerts, and predictive modeling of market conditions.",
-      icon: ChartLine,
-    },
-    {
-      title: "DeFi Integration",
-      description: "Seamless access to lending, borrowing, and staking with AI-optimized strategies.",
-      icon: Wallet,
-    },
+      icon: Shield,
+      title: 'Security First',
+      description: 'Every transaction simulated before execution. No surprises.',
+      demo: 'Full transparency, full control, full protection'
+    }
   ];
 
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-      {/* Circuit Pattern Background */}
-      <div className="absolute inset-0 bg-circuit-pattern opacity-5"></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-            Revolutionary Features
+    <section id="features" className="relative py-32 px-6 lg:px-12 bg-black">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
+        >
+          <h2 className="text-4xl md:text-5xl font-light text-white mb-4">
+            Built Different
           </h2>
-          <p className="mt-4 text-xl text-gray-600 dark:text-gray-300">
-            Harness the power of AI for your crypto investments
+          <p className="text-xl text-gray-400 font-light">
+            Not just another interface. A paradigm shift.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-20">
-          {features.map((feature, index) => (
-            <FeatureCard key={index} {...feature} />
+        <div className="grid md:grid-cols-3 gap-8">
+          {features.map((feature, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: idx * 0.2 }}
+              whileHover={{ y: -5 }}
+              className="group relative p-8 rounded-2xl bg-gradient-to-b from-white/5 to-white/0 border border-white/10 hover:border-blue-500/30 transition-all duration-500"
+            >
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:to-blue-500/5 transition-all duration-500" />
+              
+              <div className="relative z-10">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-6">
+                  <feature.icon className="w-7 h-7 text-white" />
+                </div>
+                
+                <h3 className="text-2xl font-light text-white mb-3">
+                  {feature.title}
+                </h3>
+                
+                <p className="text-gray-400 mb-4 leading-relaxed">
+                  {feature.description}
+                </p>
+                
+                <div className="pt-4 border-t border-white/5">
+                  <p className="text-sm text-blue-400 font-mono">
+                    → {feature.demo}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

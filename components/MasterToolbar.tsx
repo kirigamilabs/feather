@@ -73,12 +73,12 @@ export default function MasterToolbar({
       id: 'contract',
       icon: Code,
       label: 'Smart Contracts',
-      color: 'purple',
+      color: 'white',
       onClick: () => {
         onContractClick();
         setIsOpen(false);
       },
-      description: 'Interact with verified contracts'
+      description: 'Interact with verified contracts (Soon)'
     },
     {
       id: 'builder',

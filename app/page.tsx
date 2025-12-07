@@ -1,15 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import HeroSection from '@/components/HeroSection';
-import AIChat from '@/components/AIChat';
+import UnifiedInterface from '@/components/Interface';
 
 export default function Home() {
-  const [showChat, setShowChat] = useState(false);
-
-  return showChat ? (
-    <AIChat />
-  ) : (
-    <HeroSection onComplete={() => setShowChat(true)} />
-  );
+  return <UnifiedInterface />;
 }

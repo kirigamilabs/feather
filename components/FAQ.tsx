@@ -176,7 +176,7 @@ export const FAQ: React.FC<FAQProps> = ({ isOpen, onClose }) => {
               className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl"
             >
               <p className="text-xs text-yellow-400 text-center">
-                <strong>⚠️ Beta Software:</strong> KIRIGAMI is currently in alpha testing. 
+                <strong>⚠️ Beta Software:</strong> KIRIGAMI is currently in beta testing. 
                 Always verify transactions and use at your own risk. Report bugs through Discord.
               </p>
             </motion.div>

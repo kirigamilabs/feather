@@ -337,7 +337,7 @@ export function LegalFooter() {
   const [showPrivacy, setShowPrivacy] = useState(false);
 
   return (
-    <>
+    <div className="text-center text-xs text-gray-500 mt-3">
       <div className="flex items-center justify-center gap-4 text-xs text-gray-500 py-3 border-t border-white/10">
         <button
           onClick={() => setShowTerms(true)}
@@ -368,6 +368,6 @@ export function LegalFooter() {
 
       <TermsModal isOpen={showTerms} onClose={() => setShowTerms(false)} />
       <PrivacyModal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} />
-    </>
+    </div>
   );
 }

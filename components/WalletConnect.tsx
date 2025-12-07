@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/Button';
 import { useWallet } from '@/hooks/useWallet';
+import { Web3Utils } from '@/utils/web3Utils';
 
 interface WalletConnectProps {
   isOpen: boolean;
@@ -66,15 +67,6 @@ export const WalletConnect: React.FC<WalletConnectProps> = ({
     }
   };
 
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-
-  const getExplorerUrl = (address: string, chainId?: number) => {
-    const baseUrl = chainId === 8453 ? 'https://basescan.org' : 'https://etherscan.io';
-    return `${baseUrl}/address/${address}`;
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -117,7 +109,7 @@ export const WalletConnect: React.FC<WalletConnectProps> = ({
                 <label className="text-sm font-medium">Address</label>
                 <div className="flex items-center gap-2 p-3 bg-background rounded-lg border">
                   <code className="flex-1 text-sm">
-                    {formatAddress(walletState.address!)}
+                    {Web3Utils.formatAddress(walletState.address!)}
                   </code>
                   <Button size="sm" variant="ghost" onClick={copyAddress}>
                     <Copy className="w-4 h-4" />
@@ -126,7 +118,7 @@ export const WalletConnect: React.FC<WalletConnectProps> = ({
                     size="sm" 
                     variant="ghost"
                     onClick={() => window.open(
-                      getExplorerUrl(walletState.address!, walletState.chainId), 
+                      Web3Utils.getExplorerUrl(walletState.address!, walletState.chainId || 1), 
                       '_blank'
                     )}
                   >
@@ -164,6 +156,8 @@ export const WalletConnect: React.FC<WalletConnectProps> = ({
                   Done
                 </Button>
               </div>
+
+              
             </div>
           ) : (
             // Connection State

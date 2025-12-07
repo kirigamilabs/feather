@@ -45,8 +45,8 @@ export const AISettings = () => {
   // Form states
   const [editName, setEditName] = useState('');
   const [editContent, setEditContent] = useState('');
-  const [editModel, setEditModel] = useState('claude-sonnet-4-20250514');
-  const [editMaxTokens, setEditMaxTokens] = useState(2000);
+  const [editModel, setEditModel] = useState('claude-sonnet-4-5-20250929');
+  const [editMaxTokens, setEditMaxTokens] = useState(1000);
   const [editCategory, setEditCategory] = useState('general');
   const [editTags, setEditTags] = useState<string[]>([]);
   const [isPublic, setIsPublic] = useState(false);
@@ -175,8 +175,8 @@ export const AISettings = () => {
   const handleNewPrompt = () => {
     setEditName('');
     setEditContent('');
-    setEditModel('claude-sonnet-4-20250514');
-    setEditMaxTokens(2000);
+    setEditModel('claude-sonnet-4-5-20250929');
+    setEditMaxTokens(1000);
     setEditCategory('general');
     setEditTags([]);
     setIsPublic(false);
@@ -262,7 +262,7 @@ export const AISettings = () => {
         const imported = JSON.parse(e.target?.result as string);
         setEditName(imported.name);
         setEditContent(imported.content);
-        setEditModel(imported.model || 'claude-sonnet-4-20250514');
+        setEditModel(imported.model || 'claude-sonnet-4-5-20250929');
         setEditMaxTokens(imported.maxTokens || 2000);
         setEditCategory(imported.category || 'general');
         setEditTags(imported.tags || []);
@@ -532,7 +532,6 @@ export const AISettings = () => {
                         onChange={(e) => setEditModel(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
                       >
-                        <option value="claude-sonnet-4-20250514">Sonnet 4</option>
                         <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 (Recommended)</option>
                         <option value="claude-opus-4-20250514">Opus 4 (Advanced)</option>
                       </select>

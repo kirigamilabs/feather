@@ -20,7 +20,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "KIRI/GAMI",
+  title: "KIRIGAMI",
   description: "AI x Crypto.",
 };
 

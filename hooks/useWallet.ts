@@ -8,7 +8,8 @@ import {
   useSendTransaction,
   useWaitForTransactionReceipt,
   useSignMessage,
-  useSwitchChain
+  useSwitchChain,
+  useChainId
 } from 'wagmi';
 import { parseEther, formatEther, isAddress } from 'viem';
 import { useAIStore } from '@/state/aiState';
@@ -51,6 +52,7 @@ export const useWallet = () => {
   
   // Wagmi hooks
   const { address, isConnected, connector, chain } = useAccount();
+  const chainId = useChainId();
   const { data: balance } = useBalance({ 
     address: address as `0x${string}` | undefined 
   });
@@ -80,7 +82,7 @@ export const useWallet = () => {
       isConnected,
       address,
       balance: balance ? formatEther(balance.value) : undefined,
-      chainId: chain?.id,
+      chainId: chainId,
       connector
     };
     
@@ -115,7 +117,7 @@ export const useWallet = () => {
     }
 
     // Check if already on correct network
-    if (chain.id === NETWORK_CONFIG.targetChainId) {
+    if (chainId === NETWORK_CONFIG.targetChainId) {
       console.log(`Already on ${NETWORK_CONFIG.chainName}`);
       return true;
     }
@@ -285,7 +287,7 @@ export const useWallet = () => {
     connectors,
     
     // Network info
-    currentChainId: chain?.id,
-    isCorrectNetwork: NETWORK_CONFIG.enabled ? chain?.id === NETWORK_CONFIG.targetChainId : true
+    currentChainId: chainId,
+    isCorrectNetwork: NETWORK_CONFIG.enabled ? chainId === NETWORK_CONFIG.targetChainId : true
   };
 };

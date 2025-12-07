@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Fuel, TrendingUp, TrendingDown, Activity, RefreshCw, X, Clock } from 'lucide-react';
+import { Fuel, TrendingUp, TrendingDown, Minus, RefreshCw, X, Zap } from 'lucide-react';
 
-//TODO: PLUG IN GAS TRACKER
 interface GasData {
   slow: number;
   standard: number;
@@ -12,87 +11,67 @@ interface GasData {
   trend: 'up' | 'down' | 'stable';
 }
 
-export const getCurrentGasPrice = async () => {
-  const res = await fetch('/api/gas');
-  return res.json();
-};
-
 export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [gasData, setGasData] = useState<GasData>({
-    slow: 12,
-    standard: 18,
-    fast: 25,
-    instant: 35,
-    baseFee: 15,
+    slow: 0,
+    standard: 0,
+    fast: 0,
+    instant: 0,
+    baseFee: 0,
     trend: 'stable'
   });
   
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [history, setHistory] = useState<number[]>([15, 18, 20, 17, 16, 15, 18, 22, 19, 18]);
-  const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'standard' | 'fast' | 'instant'>('standard');
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  // Simulate gas price updates
   const fetchGasData = async () => {
     setIsRefreshing(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      const baseVariation = (Math.random() - 0.5) * 5;
-      const newBaseFee = Math.max(10, gasData.baseFee + baseVariation);
-      
-      setGasData({
-        slow: Math.round(newBaseFee * 0.8),
-        standard: Math.round(newBaseFee * 1.2),
-        fast: Math.round(newBaseFee * 1.7),
-        instant: Math.round(newBaseFee * 2.3),
-        baseFee: Math.round(newBaseFee),
-        trend: baseVariation > 1 ? 'up' : baseVariation < -1 ? 'down' : 'stable'
-      });
-      
-      setHistory(prev => [...prev.slice(-9), Math.round(newBaseFee)]);
+    try {
+      const res = await fetch('/api/gas');
+      const data = await res.json();
+      setGasData(data);
+      setLastUpdate(new Date());
+    } catch (error) {
+      console.error('Gas fetch error:', error);
+    } finally {
       setIsRefreshing(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
     if (isOpen) {
-      const interval = setInterval(fetchGasData, 15000); // Update every 15s
+      fetchGasData();
+      const interval = setInterval(fetchGasData, 12000); // Update every 12s
       return () => clearInterval(interval);
     }
   }, [isOpen]);
 
   const calculateCost = (gasPrice: number, gasUnits: number = 21000) => {
-    // ETH price mock: $3000
     const ethCost = (gasPrice * gasUnits) / 1e9;
-    const usdCost = ethCost * 3000;
+    const usdCost = ethCost * 3000; // Mock ETH price
     return { eth: ethCost.toFixed(6), usd: usdCost.toFixed(2) };
   };
 
-  const getTimeEstimate = (speed: string) => {
-    switch (speed) {
-      case 'slow': return '5-10 min';
-      case 'standard': return '2-5 min';
-      case 'fast': return '< 2 min';
-      case 'instant': return '< 30 sec';
-      default: return 'Unknown';
+  const getTrendIcon = () => {
+    switch (gasData.trend) {
+      case 'up': return <TrendingUp className="w-4 h-4 text-red-400" />;
+      case 'down': return <TrendingDown className="w-4 h-4 text-green-400" />;
+      default: return <Minus className="w-4 h-4 text-gray-400" />;
     }
   };
 
-  useEffect(() => {
-    const fetchGas = async () => {
-      try {
-        const res = await fetch('/api/gas');
-        const data = await res.json();
-        setGasData(data);
-      } catch (error) {
-        console.error('Gas fetch error:', error);
-      }
-    };
+  const getTrendColor = () => {
+    switch (gasData.trend) {
+      case 'up': return 'text-red-400';
+      case 'down': return 'text-green-400';
+      default: return 'text-gray-400';
+    }
+  };
 
-    fetchGas();
-    const interval = setInterval(fetchGas, 120000); // 120 seconds
-    return () => clearInterval(interval);
-  }, []);
+  const formatGwei = (value: number) => {
+    return value < 1 ? value.toFixed(3) : value.toFixed(2);
+  };
 
   if (!isOpen) return null;
 
@@ -101,14 +80,14 @@ export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClo
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 w-full max-w-lg"
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-orange-500/20 rounded-3xl p-6 w-full max-w-md shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -118,15 +97,15 @@ export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClo
               <Fuel className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-light text-white">Gas Tracker</h2>
-              <p className="text-sm text-gray-400">Ethereum Mainnet</p>
+              <h2 className="text-2xl font-light text-white">Gas Tracker</h2>
+              <p className="text-xs text-gray-400">Ethereum Mainnet</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={fetchGasData}
               disabled={isRefreshing}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-5 h-5 text-gray-400 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
@@ -136,65 +115,57 @@ export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClo
           </div>
         </div>
 
-        {/* Current Status */}
-        <div className="mb-6 p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-xl border border-orange-500/20">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">Base Fee</span>
+        {/* Current Base Fee */}
+        <div className="mb-6 p-5 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-500/30">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-medium text-gray-300">Base Fee</span>
             <div className="flex items-center gap-2">
-              {gasData.trend === 'up' && <TrendingUp className="w-4 h-4 text-red-400" />}
-              {gasData.trend === 'down' && <TrendingDown className="w-4 h-4 text-green-400" />}
-              {gasData.trend === 'stable' && <Activity className="w-4 h-4 text-gray-400" />}
-              <span className={`text-sm font-semibold ${
-                gasData.trend === 'up' ? 'text-red-400' : 
-                gasData.trend === 'down' ? 'text-green-400' : 
-                'text-gray-400'
-              }`}>
+              {getTrendIcon()}
+              <span className={`text-sm font-semibold ${getTrendColor()}`}>
                 {gasData.trend === 'up' ? 'Rising' : gasData.trend === 'down' ? 'Falling' : 'Stable'}
               </span>
             </div>
           </div>
-          <div className="text-3xl font-bold text-white">
-            {gasData.baseFee} <span className="text-lg text-gray-400">Gwei</span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-4xl font-bold text-white">
+              {formatGwei(gasData.baseFee)}
+            </span>
+            <span className="text-lg text-gray-400">Gwei</span>
+          </div>
+          <div className="mt-2 text-xs text-gray-400">
+            Updated {lastUpdate.toLocaleTimeString()}
           </div>
         </div>
 
-        {/* Gas Price Options */}
+        {/* Gas Speed Options */}
         <div className="space-y-3 mb-6">
           {[
-            { key: 'slow', label: 'Slow', icon: '🐌', color: 'green' },
-            { key: 'standard', label: 'Standard', icon: '⚡', color: 'blue' },
-            { key: 'fast', label: 'Fast', icon: '🚀', color: 'orange' },
-            { key: 'instant', label: 'Instant', icon: '⚡️', color: 'red' }
-          ].map(({ key, label, icon, color }) => {
-            type NumericKeys = Exclude<keyof GasData, 'trend'>;
-            const speed = key as 'slow' | 'standard' | 'fast' | 'instant';
-            const cost = calculateCost(gasData[speed]);
-            const isSelected = selectedSpeed === speed;
+            { key: 'slow', label: '🐌 Slow', time: '~5 min', color: 'green' },
+            { key: 'standard', label: '⚡ Standard', time: '~2 min', color: 'blue' },
+            { key: 'fast', label: '🚀 Fast', time: '~30 sec', color: 'orange' },
+            { key: 'instant', label: '⚡️ Instant', time: '~15 sec', color: 'red' }
+          ].map(({ key, label, time, color }) => {
+            const speed = key as keyof Omit<GasData, 'baseFee' | 'trend'>;
+            const gasPrice = gasData[speed];
+            const cost = calculateCost(gasPrice);
             
             return (
-              <motion.button
+              <motion.div
                 key={key}
-                onClick={() => setSelectedSpeed(speed)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full p-4 rounded-xl border transition-all ${
-                  isSelected
-                    ? `bg-${color}-500/20 border-${color}-500/50`
-                    : 'bg-white/5 border-white/10 hover:border-white/20'
-                }`}
+                whileHover={{ scale: 1.02, x: 4 }}
+                className="p-4 rounded-xl bg-gradient-to-r from-white/5 to-white/[0.02] border border-white/10 hover:border-white/30 transition-all cursor-pointer"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{icon}</span>
-                    <div className="text-left">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-white font-medium">{label}</h3>
-                        <span className="text-xs text-gray-400 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {getTimeEstimate(speed)}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-400">{gasData[speed]} Gwei</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-white font-medium">{label}</span>
+                      <span className="text-xs text-gray-500">{time}</span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl font-bold text-white">
+                        {formatGwei(gasPrice)}
+                      </span>
+                      <span className="text-sm text-gray-400">Gwei</span>
                     </div>
                   </div>
                   <div className="text-right">
@@ -202,36 +173,16 @@ export default function GasTracker({ isOpen, onClose }: { isOpen: boolean; onClo
                     <p className="text-xs text-gray-400">{cost.eth} ETH</p>
                   </div>
                 </div>
-              </motion.button>
+              </motion.div>
             );
           })}
         </div>
 
-        {/* Historical Chart (Simple) */}
-        <div className="mb-6 p-4 bg-white/5 rounded-xl border border-white/10">
-          <h3 className="text-sm font-medium text-gray-300 mb-3">Last 10 Updates</h3>
-          <div className="flex items-end justify-between h-24 gap-1">
-            {history.map((value, idx) => {
-              const maxValue = Math.max(...history);
-              const height = (value / maxValue) * 100;
-              
-              return (
-                <motion.div
-                  key={idx}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${height}%` }}
-                  className="flex-1 bg-gradient-to-t from-orange-500 to-red-500 rounded-t"
-                  title={`${value} Gwei`}
-                />
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Info */}
-        <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
-          <p className="text-xs text-blue-400 text-center">
-            💡 Gas prices are lower during off-peak hours (typically midnight-6am UTC)
+        {/* Info Footer */}
+        <div className="p-4 bg-blue-500/5 rounded-xl border border-blue-500/20">
+          <p className="text-xs text-blue-400 text-center flex items-center justify-center gap-2">
+            <Zap className="w-3 h-3" />
+            Gas prices are typically lower during off-peak hours (midnight-6am UTC)
           </p>
         </div>
       </motion.div>

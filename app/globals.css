@@ -28,7 +28,7 @@
 
 .dark {
   /* Dark Feather */
-  --background: hsl(260 35% 6%);
+  --background: hsl(0 0 0%);
   --foreground: hsl(195 50% 88%);
   --card: hsl(265 38% 12%);
   --card-foreground: hsl(195 50% 88%);

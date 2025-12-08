@@ -440,7 +440,7 @@ export default function UnifiedInterface() {
         onSwapClick={() => setShowSwap(true)}
         onGasClick={() => setShowGas(true)}
         onWalletClick={() => setShowWallet(true)}
-        onSettingsClick={() => setShowSettings(true)}
+        onSettingsClick={() => setShowSettings(false)} //pending update
         scrolled={scrolled}
       />
 

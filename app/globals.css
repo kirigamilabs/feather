@@ -4,19 +4,19 @@
 
 :root {
   /* Feather */
-   --background: hsl(40 20% 94%);
-  --foreground: hsl(30 10% 18%);
-  --card: hsl(0 0% 98%);
-  --card-foreground: hsl(30 10% 18%);
+  --background: hsl(0 0 0%);
+  --foreground: hsl(195 60% 92%);
+  --card: hsl(222 47% 8%);
+  --card-foreground: hsl(195 60% 92%);
   --popover: hsl(0 0% 98%);
   --popover-foreground: hsl(30 10% 18%);
-  --primary: hsl(225 40% 28%);
+  --primary: hsl(195 100% 55%);
   --primary-foreground: hsl(40 20% 94%);
   --secondary: hsl(215 45% 35%);
   --secondary-foreground: hsl(40 20% 94%);
   --muted: hsl(30 15% 85%);
-  --muted-foreground: hsl(30 8% 52%);
-  --accent: hsl(220 50% 42%);
+  --muted-foreground: hsl(195 50% 65%);
+  --accent: hsl(185 85% 52%);
   --accent-foreground: hsl(30 10% 18%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(40 20% 94%);

@@ -180,7 +180,7 @@ const Hero = ({ isChatActive }: { isChatActive: boolean }) => {
             />
           </span>
           <br />
-          Become Reality
+          Become Transactions
         </motion.h1>
 
         {/* Subtitle */}
@@ -190,7 +190,6 @@ const Hero = ({ isChatActive }: { isChatActive: boolean }) => {
           transition={{ duration: 1, delay: 0.4 }}
           className="text-lg md:text-xl text-gray-400 font-light mb-8 max-w-2xl mx-auto"
         >
-          The first AI that doesn't just advise—it executes.
           <br />
           <span className="text-gray-500">Speak your crypto strategy. Watch it happen.</span>
         </motion.p>

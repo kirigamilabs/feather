@@ -154,7 +154,7 @@ export default function DisclaimerBanner() {
           </div>
         </motion.div>
 
-        {/* Terms Modal (simplified - full version should be in separate component) */}
+        {/* Terms Modal */}
         {showTerms && (
           <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-[110] p-4">
             <div className="bg-gray-900 rounded-2xl p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto">
@@ -162,13 +162,24 @@ export default function DisclaimerBanner() {
                 <h3 className="text-xl font-bold text-white">Terms of Service</h3>
                 <button
                   onClick={() => setShowTerms(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-400 hover:text-white"
                 >
                   ✕
                 </button>
               </div>
-              <div className="text-gray-300 space-y-4 text-sm">
-                {TERMS_OF_SERVICE}
+              <div className="pr-4">
+                {TERMS_OF_SERVICE.split('\n\n').map((paragraph, idx) => {
+                  const trimmed = paragraph.trim();
+                  if (!trimmed) return null;
+                  
+                  const isHeading = /^\d+\./.test(trimmed) || (trimmed === trimmed.toUpperCase() && trimmed.length < 100);
+                  
+                  return isHeading ? (
+                    <h4 key={idx} className="text-lg font-bold text-white mt-6 mb-3">{trimmed}</h4>
+                  ) : (
+                    <p key={idx} className="text-gray-300 mb-4 leading-relaxed text-sm">{trimmed}</p>
+                  );
+                })}
               </div>
               <button
                 onClick={() => setShowTerms(false)}
@@ -188,13 +199,24 @@ export default function DisclaimerBanner() {
                 <h3 className="text-xl font-bold text-white">Privacy Policy</h3>
                 <button
                   onClick={() => setShowPrivacy(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-400 hover:text-white"
                 >
                   ✕
                 </button>
               </div>
-              <div className="text-gray-300 space-y-4 text-sm">
-                {PRIVACY_POLICY}
+              <div className="pr-4">
+                {PRIVACY_POLICY.split('\n\n').map((paragraph, idx) => {
+                  const trimmed = paragraph.trim();
+                  if (!trimmed) return null;
+                  
+                  const isHeading = /^\d+\./.test(trimmed) || (trimmed === trimmed.toUpperCase() && trimmed.length < 100);
+                  
+                  return isHeading ? (
+                    <h4 key={idx} className="text-lg font-bold text-white mt-6 mb-3">{trimmed}</h4>
+                  ) : (
+                    <p key={idx} className="text-gray-300 mb-4 leading-relaxed text-sm">{trimmed}</p>
+                  );
+                })}
               </div>
               <button
                 onClick={() => setShowPrivacy(false)}

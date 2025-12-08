@@ -465,7 +465,7 @@ export default function UnifiedInterface() {
       {/* Hero Section */}
       <Hero isChatActive={isChatActive} />
 
-      {/* Chat Messages - Slides up when active */}
+      {/* Chat Messages */}
       <motion.div
         initial={false}
         animate={{
@@ -536,20 +536,20 @@ export default function UnifiedInterface() {
         </div>
       </motion.div>
 
-      {/* Features Section - Hidden when chat is active */}
+      {/* Features Section */}
       {!isChatActive && <FeaturesSection />}
       {!isChatActive && <SolutionsSection />}
       {!isChatActive && <PricingSection />}
       {!isChatActive && <LegalFooter />}
 
-      {/* Fixed Chat Input */}
+      {/* Chat Input */}
       <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.8 }}
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/80 backdrop-blur-2xl"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/95 backdrop-blur-2xl"
       >
-        <div className="max-w-4xl mx-auto px-6 py-3">
+        <div className="max-w-4xl mx-auto px-6 py-4">
           <form onSubmit={handleSubmit} className="flex gap-3">
             <input
               ref={inputRef}
@@ -567,10 +567,14 @@ export default function UnifiedInterface() {
               <Send className="w-5 h-5" />
             </button>
           </form>
-          <p className="text-center text-xs text-gray-500 mt-3">
+          
+          <p className="text-center text-xs text-gray-500 mt-3 mb-2">
             Powered by AI • Always verify transactions
           </p>
-
+        </div>
+        
+        {/* Legal Footer */}
+        <div className="border-t border-white/5">
           <LegalFooter />
         </div>
       </motion.div>

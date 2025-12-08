@@ -268,6 +268,11 @@ export default function UnifiedInterface() {
             return;
           }
           setShowSwap(true);
+          //setSwapPrefillData({
+          //  fromToken: action.params?.fromToken,
+          //  toToken: action.params?.toToken,
+          //  amount: action.params?.amount
+          //});
           break;
         case 'check_gas':
           setShowGas(true);

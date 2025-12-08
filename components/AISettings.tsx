@@ -400,8 +400,8 @@ export const AISettings = () => {
                       </p>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
                         <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                          {prompt.model.includes('opus') ? 'Opus' : 
-                           prompt.model.includes('4-5') ? 'Sonnet 4.5' : 'Sonnet 4'}
+                          {prompt.model.includes('opus') ? 'Opus 4.5' : 
+                           prompt.model.includes('sonnet') ? 'Sonnet 4.5' : 'Haiku 4.5'}
                         </span>
                         <span className="text-xs text-muted-foreground">
                           {prompt.maxTokens} tokens
@@ -533,7 +533,8 @@ export const AISettings = () => {
                         className="w-full px-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
                       >
                         <option value="claude-sonnet-4-5-20250929">Sonnet 4.5 (Recommended)</option>
-                        <option value="claude-opus-4-20250514">Opus 4 (Advanced)</option>
+                        <option value="claude-opus-4-5-20251101">Opus 4.5 (Advanced)</option>
+                        <option value="claude-haiku-4-5-20251001">Haiku 4.5 (Hello)</option>
                       </select>
                     </div>
                     <div>
@@ -597,7 +598,7 @@ export const AISettings = () => {
                       <span className="text-muted-foreground">Model:</span>
                       <span className="ml-2 font-medium">
                         {selectedPrompt.model.includes('opus') ? 'Opus 4.5' : 
-                         selectedPrompt.model.includes('4-5') ? 'Sonnet 4.5' : 'Sonnet 4'}
+                         selectedPrompt.model.includes('sonnet') ? 'Sonnet 4.5' : 'Haiku 4'}
                       </span>
                     </div>
                     <div>

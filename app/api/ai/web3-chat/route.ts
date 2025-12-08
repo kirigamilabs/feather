@@ -75,7 +75,7 @@ const promptStore = new Map<string, { id: string; name: string; content: string;
 promptStore.set('default', {
   id: 'default',
   name: 'Suguru AI',
-  model: 'claude-opus-4-5-20251101',
+  model: 'claude-haiku-4-5-20251001',
   maxTokens: 2000,
   content: DEFAULT_SYSTEM_PROMPT,
   createdAt: Date.now()

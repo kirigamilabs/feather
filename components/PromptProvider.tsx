@@ -347,6 +347,7 @@ const PromptCreatorModal = ({
               >
                 <option value="claude-sonnet-4-5-20250929">Sonnet 4.5</option>
                 <option value="claude-opus-4-5-20251101">Opus 4.5</option>
+                <option value="claude-haiku-4-5-20251001">Haiku 4.5</option>
               </select>
             </div>
 
@@ -473,7 +474,7 @@ export const PromptSelector = () => {
                           {prompt.content ? prompt.content.slice(0, 80) + '...' : 'No content'}
                         </p>
                         <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
-                          <span>{prompt.model?.includes('opus') ? 'Opus' : prompt.model?.includes('4-5') ? 'Sonnet 4.5' : 'Sonnet 4'}</span>
+                          <span>{prompt.model?.includes('opus') ? 'Opus 4.5' : prompt.model?.includes('sonnet') ? 'Sonnet 4.5' : 'Haiku 4.5'}</span>
                           <span>•</span>
                           <span>{prompt.maxTokens || 1000} tokens</span>
                         </div>

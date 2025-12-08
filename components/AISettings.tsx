@@ -596,7 +596,7 @@ export const AISettings = () => {
                     <div>
                       <span className="text-muted-foreground">Model:</span>
                       <span className="ml-2 font-medium">
-                        {selectedPrompt.model.includes('opus') ? 'Opus 4' : 
+                        {selectedPrompt.model.includes('opus') ? 'Opus 4.5' : 
                          selectedPrompt.model.includes('4-5') ? 'Sonnet 4.5' : 'Sonnet 4'}
                       </span>
                     </div>
